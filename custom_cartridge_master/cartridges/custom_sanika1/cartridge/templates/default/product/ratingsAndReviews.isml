@@ -1,0 +1,43 @@
+<isscript>
+    var assets = require('*/cartridge/scripts/assets');
+    assets.addJs('/js/showmore.js'); 
+   // assets.addCss('/css/showreview.css'); 
+</isscript>
+
+<isif condition="${pdict.ratingsAndReviews}">
+    <div class="ratings-reviews">
+        <h2>Customer Reviews for Product ID: ${pdict.ratingsAndReviews.custom.ProductId}</h2>
+
+        <isif condition="${pdict.reviews && pdict.reviews.length > 0}">
+            <h3>Customer Reviews</h3>
+            <ul class="reviews-list"> 
+                <isset name="totalReviews" value="${pdict.reviews.length}" scope="page"/>
+                <isset name="displayCount" value="5" scope="page"/>
+                <isloop items="${pdict.reviews.slice(0, displayCount)}" var="review">
+                    <li class="review-item">
+                        <h4>Order ID: ${review.orderId}</h4>
+                        <p><strong>Review:</strong> ${review.review}</p>
+                        <p><strong>Rating:</strong> ${review.rating}</p>
+                    </li>
+                </isloop>
+                <isif condition="${totalReviews > displayCount}">
+                        <button class="show-more" id="showMoreBtn">Show More</button>
+                   
+                    <ul class="hidden-reviews" style="display: none;"> 
+                        <isloop items="${pdict.reviews.slice(displayCount)}" var="additionalReview">
+                            <li class="review-item">
+                                <h4>Order ID: ${additionalReview.orderId}</h4>
+                                <p><strong>Review:</strong> ${additionalReview.review}</p>
+                                <p><strong>Rating:</strong> ${additionalReview.rating}</p>
+                            </li>
+                        </isloop>
+                    </ul>
+                </isif>
+            </ul>
+        <iselse>
+            <p>No customer reviews available for this product.</p>
+        </isif>
+    </div>
+<iselse>
+    <p>No ratings and reviews found for this product.</p>
+</isif>  
