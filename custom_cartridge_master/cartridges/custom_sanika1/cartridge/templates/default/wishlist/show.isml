@@ -1,5 +1,4 @@
 <isdecorate template="common/layout/page">
-
 <isscript>
         var assets = require('*/cartridge/scripts/assets');
         assets.addJs('/js/productDetail.js');
@@ -8,15 +7,12 @@
 <h2>Your Wishlist</h2>
 
 <style>
-/* Wishlist Grid Layout */
 .wishlist-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 20px;
     padding: 20px;
 }
-
-/* Product Tile Styling */
 .product-tile {
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -31,8 +27,6 @@
     transform: translateY(-5px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-
-/* Product Image */
 .product-image-container {
     width: 100%;
     height: 150px;
@@ -42,14 +36,12 @@
     overflow: hidden;
     margin-bottom: 10px;
 }
-
 .product-image {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
 }
 
-/* Product Details */
 .product-details {
     text-align: left;
 }
@@ -73,7 +65,6 @@
     margin-bottom: 15px;
 }
 
-/* Remove Button */
 .remove-form {
     text-align: center;
 }
@@ -91,17 +82,13 @@
 .remove-button:hover {
     background-color: #ff1a1a;
 }
-
-/* Button Container */
 .button-container {
 display: flex;
 flex-direction: column;
-gap: 10px; /* Adds spacing between the buttons */
+gap: 10px;
 align-items: center;
-margin-top: 15px; /* Optional: adds space above the button group */
+margin-top: 15px; 
 }
-
-/* Center-align Add to Cart */
 .add-to-cart-container {
 text-align: center;
 }
@@ -112,10 +99,8 @@ text-align: center;
 <div class="wishlist-grid">
     <isloop items="${pdict.wishlistItems}" var="item">
         <div class="product-tile wishlist">
-         <p>Product ID: ${item.productListItem.productID}</p> <!-- Variant product ID -->
-        <p>Master Product ID: ${item.productListItem.product.masterProduct.ID}</p> <!-- Master product ID -->
-       ${item.product.available}
-        <iscomment> ${item.productID} </iscomment>
+         <p>Product ID: ${item.productListItem.productID}</p> 
+        <iscomment> <p>Master Product ID: ${item.productListItem.product.masterProduct.ID}</p> <!-- Master product ID --> </iscomment>
             <!-- Product Image -->
             <div class="product-image-container">
                 <img src="${item.productListItem.product.getImageURL()}" alt="${item.product.getName()}" class="product-image" />
@@ -135,7 +120,7 @@ text-align: center;
 <!-- Variant Attributes -->
                             <div class="variant-attributes">
                                 <isif condition="${item.selectedVariantAttributes && !empty(item.selectedVariantAttributes)}">
-                                    <h4>Selected Attributes:</h4>
+                                   
                                     <ul>
                                         <isloop items="${Object.keys(item.selectedVariantAttributes)}" var="key">
                                             <li>
@@ -158,18 +143,8 @@ text-align: center;
 <input type="hidden" name="pid" value="${item.productID}" />
 <button type="submit" class="remove-button">Remove from Wishlist</button>
 </form>
-
-<!-- Add to Cart Button -->
-<iscomment> <div class="add-to-cart-container"> </iscomment>
-    <iscomment> <input type="hidden" class="add-to-cart-url" value="${pdict.addToCartUrl}">
-    <button class="add-to-cart btn btn-primary" id="addToCart"
-            data-pid="${item.product.masterProduct.ID}"
-            ${!item.product.readyToOrder || !item.product.available ? "disabled" : ""}>
-        <i class="fa fa-shopping-bag"></i>
-        ${Resource.msg('button.addtocart', 'common', null)}
-    </button> </iscomment>
     
-<iscomment> <div class="container product-detail product-wrapper wishlistpage" data-pid="${item.product.masterProduct.ID}">
+<div class="container product-detail product-wrapper wishlistpage" data-pid="${item.product.masterProduct.ID}">
     <input type="hidden" class="add-to-cart-url" value="${pdict.addToCartUrl}">
         <button class="add-to-cart btn btn-primary"
                 data-toggle="modal" data-target="#chooseBonusProductModal"
@@ -178,7 +153,7 @@ text-align: center;
             <i class="fa fa-shopping-bag"></i>
             ${Resource.msg('button.addtocart', 'common', null)}
         </button>
-</div> </iscomment>
+</div>
 
 
 </div>
