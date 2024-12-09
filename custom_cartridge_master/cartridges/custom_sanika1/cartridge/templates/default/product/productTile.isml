@@ -1,0 +1,53 @@
+ <div class="product-tile">
+    <!-- dwMarker="product" dwContentID="${product.uuid}" -->
+    <isinclude template="product/components/productTileImage" />
+    <div class="tile-body">
+        <isif condition="${pdict.display.swatches !== false}">
+            <isinclude template="product/components/productTileSwatch" />
+        </isif>
+
+        <isinclude template="product/components/productTileName" />
+        
+        
+
+        <isset name="price" value="${product.price}" scope="page" />
+        <isif condition="${product.productType === 'set'}">
+            <isinclude template="product/components/pricing/setPrice" />
+        <iselse>
+            <isinclude template="product/components/pricing/main" />
+        </isif>
+
+        <isif condition="${pdict.display.ratings !== false}">
+            <isinclude template="product/productTileFooter" />
+        </isif>
+    </div>
+
+     
+   <iscomment> <div class="wishlist-icon-container">
+    <form action="${URLUtils.url('wishlist-ToggleWishlist')}" method="post" class="wishlist-form" id="wishlistForm">
+        <input type="hidden" name="pid" value="${product.id}" />
+        <button type="submit" class="wishlist-icon-button" title="Add to Wishlist" 
+                style="background-color: transparent; border: 1px solid white; border-radius: 50%; padding: 10px; cursor: pointer;">
+            <i class="fa fa-heart" style="color: #e74c3c; font-size: 24px;"></i> 
+        </button>
+    </form> 
+
+    
+</div> </iscomment>
+
+<div class="wishlist-icon-container">
+    <form action="${URLUtils.url('wishlist-ToggleWishlist')}" method="post" class="wishlist-form" id="wishlistForm">
+        <input type="hidden" name="pid" value="${product.id}" />
+        <button type="submit" class="wishlist-icon-button" 
+                data-wishlist-state="false" 
+                title="Add to Wishlist" 
+                style="background-color: transparent; border: 1px solid white; border-radius: 50%; padding: 10px; cursor: pointer;">
+            <i class="fa fa-heart" style="color: #e74c3c; font-size: 24px;"></i>
+        </button>
+    </form>
+</div>
+
+
+
+    <!-- END_dwmarker -->
+</div>
