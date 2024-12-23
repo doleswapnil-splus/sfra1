@@ -1,11 +1,10 @@
 
+
 $(document).ready(function () {
     $('.wishlist-icon-button').each(function () {
         var button = $(this);
         var heartIcon = button.find('.fa-heart'); 
         var isInWishlist = button.attr('data-wishlist-state') === 'true';
-
-       
         if (isInWishlist) {
             heartIcon.css('color', 'black');
         } else {
@@ -26,14 +25,14 @@ $(document).ready(function () {
             success: function (response) {
                 var heartIcon = button.find('.fa-heart'); 
                 var isInWishlist = button.attr('data-wishlist-state') === 'true';
-
+                
                 if (response.success) {
-                    if (response.message === 'Product Removed from Wishlist') {
+                    if (response.message ==='Product Removed from Wishlist') {
                         heartIcon.css('color', '#e74c3c'); 
                         button.attr('data-wishlist-state', 'false');
                         button.attr('title', 'Add to Wishlist');
                         alert('Product Removed from Wishlist');
-                    } else if (response.message === 'Product Added to Wishlist') {
+                    } else if (response.message ==='Product Added to Wishlist') {
                         heartIcon.css('color', 'black'); 
                         button.attr('data-wishlist-state', 'true');
                         button.attr('title', 'Remove from Wishlist');

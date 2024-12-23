@@ -6,125 +6,106 @@ var ProductList=require('dw/customer/ProductList');
 var ProductMgr = require('dw/catalog/ProductMgr');
 var Transaction = require('dw/system/Transaction');
 var URLUtils = require('dw/web/URLUtils');
-var collection = require('*/cartridge/scripts/util/collections');
+var collections = require('*/cartridge/scripts/util/collections');
+var productHelper = require('*/cartridge/scripts/helpers/productHelpers');
+var Resource = require('dw/web/Resource');
 
-function getWishlistForAuthenticatedUser(req, res) {
-    var collections = require('*/cartridge/scripts/util/collections');
-    var ProductMgr = require('dw/catalog/ProductMgr');
-    var ProductListMgr = require('dw/customer/ProductListMgr');
-    var ProductList = require('dw/customer/ProductList');
-    var productHelper = require('*/cartridge/scripts/helpers/productHelpers');
-    var showProductPageHelperResult = productHelper.showProductPage(req.querystring, req.pageMetaData);
 
+server.get('ShowProducts', function (req, res, next) {
     var currentCustomer = req.currentCustomer.raw;
-    var wishlists = ProductListMgr.getProductLists(currentCustomer, ProductList.TYPE_WISH_LIST);
-    var wishlist = wishlists.length > 0 ? wishlists[0] : null;
-    var wishlistItems = wishlist ? wishlist.getProductItems() : [];
-    var updatedWishlistItems = [];
-    var iterator = wishlistItems.iterator();
+    if (currentCustomer) {
+        var wishlists = ProductListMgr.getProductLists(currentCustomer, ProductList.TYPE_WISH_LIST);
+        var wishlist = wishlists.length > 0 ? wishlists[0] : null;
+        var wishlistItems = wishlist ? wishlist.getProductItems() : [];
+        var updatedWishlistItems = [];
+        var iterator = wishlistItems.iterator();
+        while (iterator.hasNext()) {
+            var item = iterator.next();
+            var product = ProductMgr.getProduct(item.productID);
+            var selectedVariantAttributes = {};
 
-    while (iterator.hasNext()) {
-        var item = iterator.next();
-        var product = ProductMgr.getProduct(item.productID);
-        var selectedVariantAttributes = {};
+            if (product.isVariant()) {
+                var variationModel = product.getVariationModel();
+                var productVariationAttributes = variationModel.getProductVariationAttributes();
 
-       
-        if (product.isVariant()) {
-            var variationModel = product.getVariationModel();
-            var productVariationAttributes = variationModel.getProductVariationAttributes();
+                collections.forEach(productVariationAttributes, function (attribute) {
+                    var attributeValue = variationModel.getSelectedValue(attribute);
+                    if (attributeValue) {
+                        selectedVariantAttributes[attribute.getID()] = {
+                            displayName: attribute.getDisplayName(),
+                            selectedValue: attributeValue.getDisplayValue()
+                        };
+                    }
+                });
+            }
+            updatedWishlistItems.push({
+                productListItem: item,
+                selectedVariantAttributes: selectedVariantAttributes 
+            });
+        }
+        res.render('wishlist/show', {
+            wishlistItems: updatedWishlistItems,
+        });
+    } 
+    next();
+});
+// Private method to handle product removal logic
+function removeProductFromWishlist(req, currentCustomer) {
+    var productId = req.form.pid; 
+    var success = false; 
+    Transaction.wrap(function () {
+        var wishlists = ProductListMgr.getProductLists(currentCustomer.raw, ProductList.TYPE_WISH_LIST);
+        var wishlist = wishlists.length > 0 ? wishlists[0] : null;
 
-           
-            collections.forEach(productVariationAttributes, function (attribute) {
-                var attributeValue = variationModel.getSelectedValue(attribute);
-                if (attributeValue) {
-                    selectedVariantAttributes[attribute.getID()] = {
-                        displayName: attribute.getDisplayName(),
-                        selectedValue: attributeValue.getDisplayValue()
-                    };
+        if (wishlist) {
+            var productItem = null;
+            var items = wishlist.getItems().toArray();
+            items.forEach(function (item) {
+                if (item.productID === productId) {
+                    productItem = item;
+                    wishlist.removeItem(productItem);
+                    success = true;
                 }
             });
         }
-
-        updatedWishlistItems.push({
-            productListItem: item,
-            selectedVariantAttributes: selectedVariantAttributes 
-        });
-    }
-    res.render('wishlist/show', {
-        wishlistItems: updatedWishlistItems,
-        addToCartUrl: showProductPageHelperResult.addToCartUrl
     });
+    return success; 
 }
-server.get('ShowProducts', function (req, res, next) {
-
-    var currentCustomer = req.currentCustomer;
-    
-    if (currentCustomer.raw.authenticated) {
-        getWishlistForAuthenticatedUser(req, res, currentCustomer);
-       
-    }else{
-        getWishlistForAuthenticatedUser(req, res, currentCustomer);
-
-    }
-    
-    next();
-});
-function removeProductFromWishlist(req, res) {
-    var productId = req.form.pid; 
-    var currentCustomer = req.currentCustomer;
-        Transaction.wrap(function () {
-            var wishlists = ProductListMgr.getProductLists(currentCustomer.raw, ProductList.TYPE_WISH_LIST);
-            var wishlist = wishlists.length > 0 ? wishlists[0] : null;
-
-            if (wishlist) {
-                var productItem = null;
-                var items = wishlist.getItems().toArray();
-
-                items.forEach(function (item) {
-                    if (item.productID === productId) {
-                        productItem = item;
-                    }
-                });
-                if (productItem) {
-                    wishlist.removeItem(productItem);
-                }
-            }
-        });
-        res.render('wishlist/success', {
-            successMessage: 'Product has been removed from your wishlist.'
-        });
-    
-}
+//remove product from wishlist 
 server.post('Remove', function (req, res, next) {
     var currentCustomer = req.currentCustomer;
-    if (currentCustomer.raw.authenticated) {
-        removeProductFromWishlist(req, res, currentCustomer);
-       
-    }else{
-        removeProductFromWishlist(req, res, currentCustomer);
-
+    var isRemoved = removeProductFromWishlist(req, currentCustomer);
+    if (isRemoved) {
+        res.render('wishlist/success', {
+            successMessage: Resource.msg('wishlist.remove.success', 'wishlist', null)
+        });
+    } else {
+        res.render('wishlist/error', {
+            errorMessage: Resource.msg('wishlist.remove.error', 'wishlist', null)
+        });
     }
     next();
 });
-function handleWishlistToggle(req, res, currentCustomer) {
+//Add/remove product using from pdp or product tile 
+function handleWishlistToggle(req, currentCustomer) {
     var productId = req.form.pid; 
-    var currentCustomer = req.currentCustomer;
-    
     var product = ProductMgr.getProduct(productId);
+    var responseMessage = '';
+    var success = false;
 
     if (product) {
         var variantProduct = null; 
+        ///get variant of master product(default value)
         if (product.master) {
             var variationModel = product.getVariationModel();
             var variants = variationModel.getVariants();
-
             if (variants.length > 0) {
                 variantProduct = variants.toArray()[0]; 
             }
         } else {
+            //already variant product
             variantProduct = product;
         }
-
         if (variantProduct) {
             Transaction.wrap(function () {
                 var wishlists = ProductListMgr.getProductLists(currentCustomer.raw, ProductList.TYPE_WISH_LIST);
@@ -138,15 +119,12 @@ function handleWishlistToggle(req, res, currentCustomer) {
                     items.forEach(function (item) {
                         if (item.productID === variantProduct.ID) {
                             productItem = item;
+                            wishlist.removeItem(productItem); // Remove product as soon as it's found.
+                            success = true;
+                            responseMessage = Resource.msg('wishlist.toggle.success.remove', 'wishlist', null);
                         }
                     });
-                    if (productItem) {
-                        wishlist.removeItem(productItem);
-                        res.json({
-                            success: true,
-                            message: 'Product Removed from Wishlist'
-                        });
-                    } else {
+                    if (!productItem) {
                         var newProductItem = wishlist.createProductItem(variantProduct);
                         var optionModel = variantProduct.getOptionModel();
                         if (optionModel) {
@@ -158,34 +136,32 @@ function handleWishlistToggle(req, res, currentCustomer) {
                                 }
                             });
                         }
-                        res.json({
-                            success: true,
-                            message: 'Product Added to Wishlist'
-                        });
+                        success = true;
+                        responseMessage = Resource.msg('wishlist.toggle.success.add', 'wishlist', null);
                     }
                 }
+                
             });
         } else {
-            res.json({
-                success: false,
-                message: 'No variant product could be found for the selected master product.'
-            });
+            success = false;
+            responseMessage = Resource.msg('wishlist.toggle.error.noVariant', 'wishlist', null);
         }
     } else {
-        res.json({
-            success: false,
-            message: 'The product could not be found.'
-        });
+        success = false;
+        responseMessage = Resource.msg('wishlist.toggle.error.noProduct', 'wishlist', null);
     }
+
+    return { success: success, message: responseMessage };
 }
 server.post('ToggleWishlist', function (req, res, next) {
     var currentCustomer = req.currentCustomer;
-    if (currentCustomer.raw.authenticated) {
-        handleWishlistToggle(req, res, currentCustomer);
-    } else {
-        handleWishlistToggle(req, res, currentCustomer);
-    }
-    next();
+    var result = handleWishlistToggle(req, currentCustomer);
+    res.json({
+        success: result.success,
+        message: result.message
+    });
+
+    next(); 
 });
 module.exports = server.exports();
 
