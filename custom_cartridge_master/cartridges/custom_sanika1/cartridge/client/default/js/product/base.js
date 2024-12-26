@@ -1,11 +1,9 @@
 'use strict';
 
  var base1 = require('base/product/base');
-
  function getAddToCartUrl() {
     return $('.add-to-cart-url').val();
 }
-
 function getChildProducts() {
     var childProducts = [];
     $('.bundle-item').each(function () {
@@ -14,10 +12,8 @@ function getChildProducts() {
             quantity: parseInt($(this).find('label.quantity').data('quantity'), 10)
         });
     });
-
     return childProducts.length ? JSON.stringify(childProducts) : [];
 }
-
 function handlePostCartAdd(response) {
     $('.minicart').trigger('count:update', response);
     var messageType = response.error ? 'alert-danger' : 'alert-success';
@@ -31,19 +27,16 @@ function handlePostCartAdd(response) {
                 '<div class="add-to-cart-messages"></div>'
             );
         }
-
         $('.add-to-cart-messages').append(
             '<div class="alert ' + messageType + ' add-to-basket-alert text-center" role="alert">'
             + response.message
             + '</div>'
         );
-
         setTimeout(function () {
             $('.add-to-basket-alert').remove();
         }, 5000);
     }
 }
-
 function getOptions($productContainer) {
     var options = $productContainer
         .find('.product-option')
@@ -57,24 +50,17 @@ function getOptions($productContainer) {
                 selectedValueId: selectedValueId
             };
         }).toArray();
-
     return JSON.stringify(options);
 }
-
-
-
  function addToCart() {
     $(document).on('click', 'button.add-to-cart, button.add-to-cart-global', function () {
         var addToCartUrl;
         var pid;
         var pidsObj;
         var setPids;
-
         $('body').trigger('product:beforeAddToCart', this);
-
         if ($('.set-items').length && $(this).hasClass('add-to-cart-global')) {
             setPids = [];
-
             $('.product-detail').each(function () {
                 if (!$(this).hasClass('product-set-detail')) {
                     setPids.push({
@@ -86,7 +72,6 @@ function getOptions($productContainer) {
             });
             pidsObj = JSON.stringify(setPids);
         }
-
         if($('.wishlistpage').length)
         {
           pid=$(this).closest('.product-detail').data('pid');
@@ -95,43 +80,31 @@ function getOptions($productContainer) {
         {
             pid = base1.getPidValue($(this));
         }
-        //pid = base1.getPidValue($(this));//?null:$(this).closest('.product-detail').data('pid');
-
         var $productContainer = $(this).closest('.product-detail');
         if (!$productContainer.length) {
             $productContainer = $(this).closest('.quick-view-dialog').find('.product-detail');
         }
-
         addToCartUrl = getAddToCartUrl();
-
         var isGiftCertificate = $productContainer.find('.gift-certificate-options').length > 0;
         var giftCertificateType = null;
-
         if (isGiftCertificate) {
             giftCertificateType = $productContainer
                 .find('input[name="giftCertificate"]:checked')
-                .val(); // 'email' or 'paper'
+                .val(); 
         }
-
         var form = {
             pid: pid,
             pidsObj: pidsObj,
             childProducts: getChildProducts(),
-            quantity: base1.getQuantitySelected($(this))
-            
+            quantity: base1.getQuantitySelected($(this))   
         };
-if (isGiftCertificate) {
-    form.giftCertificateType = giftCertificateType || null; // Default to null if not defined
-    form.isGiftCertificate=true;
-}
-
-         
+        if (isGiftCertificate) {
+           form.giftCertificateType = giftCertificateType || null; 
+           form.isGiftCertificate=true;
+        } 
         if (!$('.bundle-item').length) {
             form.options = getOptions($productContainer);
         }
-
-
-
         $(this).trigger('updateAddToCartFormData', form);
         if (addToCartUrl) {
             $.ajax({
@@ -151,7 +124,5 @@ if (isGiftCertificate) {
         }
     });
 }
-
-
 base1.addToCart=addToCart;
 module.exports=base1;
