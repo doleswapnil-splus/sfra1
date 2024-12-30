@@ -25,27 +25,28 @@ $(document).ready(function () {
             success: function (response) {
                 var heartIcon = button.find('.fa-heart'); 
                 var isInWishlist = button.attr('data-wishlist-state') === 'true';
-                
                 if (response.success) {
-                    if (response.message ==='Product Removed from Wishlist') {
+                    if (response.message ===window.wishlistMessages.wishlistRemoveSuccess){
                         heartIcon.css('color', '#e74c3c'); 
                         button.attr('data-wishlist-state', 'false');
-                        button.attr('title', 'Add to Wishlist');
-                        alert('Product Removed from Wishlist');
-                    } else if (response.message ==='Product Added to Wishlist') {
+                        button.attr('title','Add to Wishlist');
+                        alert(window.wishlistMessages.wishlistRemoveSuccess);
+                    } else if (response.message === window.wishlistMessages.wishlistAddSuccess) {
                         heartIcon.css('color', 'black'); 
                         button.attr('data-wishlist-state', 'true');
-                        button.attr('title', 'Remove from Wishlist');
-                        alert('Product Added to Wishlist');
+                        button.attr('title','Remove from Wishlist');
+                        alert(window.wishlistMessages.wishlistAddSuccess);
                     }
                 } else {
-                    alert(response.message || 'An unexpected error occurred');
+                    alert(window.wishlistMessages.wishlistToggleError);
                 }
             },
             error: function (xhr, status, error) {
-                alert('An error occurred while toggling the wishlist: ' + error);
+                alert(window.wishlistMessages.wishlistToggleError);
             }
         });
     });
 });
+
+
 
