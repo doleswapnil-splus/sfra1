@@ -192,7 +192,8 @@ function getCustomerObject(customer) {
             firstName: customer.profile.firstName,
             email: customer.profile.email,
             phone: customer.profile.phoneHome,
-            customerNo: customer.profile.customerNo
+            customerNo: customer.profile.customerNo,
+            totalRewardPoints:customer.profile.custom.totalRewardPoints
         },
         addressBook: {
             preferredAddress: getAddressObject(preferredAddress),
