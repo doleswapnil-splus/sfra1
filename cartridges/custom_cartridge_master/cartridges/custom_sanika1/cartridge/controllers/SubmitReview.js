@@ -1,11 +1,12 @@
 
 'use strict';
+
 var server = require('server');
-var CustomObjectMgr = require('dw/object/CustomObjectMgr');
-var Transaction = require('dw/system/Transaction');
-var Resource = require('dw/web/Resource');
 
 server.post('start', function(req, res, next) {
+    var CustomObjectMgr = require('dw/object/CustomObjectMgr');
+    var Resource = require('dw/web/Resource');
+    var Transaction = require('dw/system/Transaction');
     var ProductId =req.form.productId;
     var orderId = req.form.orderId;
     var reviewText = req.form.review;
@@ -42,4 +43,5 @@ server.post('start', function(req, res, next) {
         });
         return next();
 });
+
 module.exports = server.exports();
