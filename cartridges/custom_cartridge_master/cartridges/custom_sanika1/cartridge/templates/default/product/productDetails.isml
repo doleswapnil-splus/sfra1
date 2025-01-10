@@ -3,9 +3,8 @@
     <isscript>
         var assets = require('*/cartridge/scripts/assets');
         assets.addJs('/js/productDetail.js');
-         assets.addJs('/js/whishlistHeart.js');
+        assets.addJs('/js/whishlistHeart.js');
         assets.addCss('/css/product/detail.css');
-        
     </isscript>
 
     <isset name="product" value="${pdict.product}" scope="page" />
@@ -15,9 +14,9 @@
         <div class="container product-detail product-wrapper" data-pid="${product.id}">
             <div class="row">
                 <div class="col-12">
-                    <!--Breadcrumbs-->
+                    <!-- Breadcrumbs -->
                     <div class="product-breadcrumb d-md-none">
-                        <isinclude template="components/breadcrumbs/pageBreadcrumbs"/>
+                        <isinclude template="components/breadcrumbs/pageBreadcrumbs" />
                     </div>
 
                     <!-- Product Name -->
@@ -29,28 +28,35 @@
                 </div>
             </div>
 
-
             <!-- Wishlist Button -->
-        <div class="wishlist-icon-container">
-    <form action="${URLUtils.url('wishlist-ToggleWishlist')}" method="post" class="wishlist-form" id="wishlistForm">
-        <input type="hidden" name="pid" value="${product.id}" />
-        <button type="submit" class="wishlist-icon-button" 
-                data-wishlist-state="false" 
-                title="Add to Wishlist" 
-                style="background-color: transparent; border: 1px solid white; border-radius: 50%; padding: 10px; cursor: pointer;">
-            <i class="fa fa-heart" style="color: #e74c3c; font-size: 24px;"></i>
-        </button>
-    </form>
-</div>
+            <div class="wishlist-icon-container">
+                <form action="${URLUtils.url('wishlist-ToggleWishlist')}" method="post" class="wishlist-form" id="wishlistForm">
+                    <input type="hidden" name="pid" value="${product.id}" />
+                    <button type="submit"
+                            class="wishlist-icon-button"
+                            data-wishlist-state="false"
+                            title="Add to Wishlist"
+                            style="background-color: transparent;
+                                   border: 1px solid white;
+                                   border-radius: 50%;
+                                   padding: 10px;
+                                   cursor: pointer;">
+                        <i class="fa fa-heart"
+                           style="color: #e74c3c;
+                                  font-size: 24px;"></i>
+                    </button>
+                </form>
+            </div>
+
             <div class="row">
                 <!-- Product Images Carousel -->
                 <isinclude template="product/components/imageCarousel" />
 
                 <div class="col-12 col-sm-6">
-                    <!--Breadcrumbs-->
+                    <!-- Breadcrumbs -->
                     <div class="row">
                         <div class="product-breadcrumb col hidden-sm-down">
-                            <isinclude template="components/breadcrumbs/pageBreadcrumbs"/>
+                            <isinclude template="components/breadcrumbs/pageBreadcrumbs" />
                         </div>
                     </div>
 
@@ -60,7 +66,6 @@
                             <h1 class="product-name hidden-sm-down">${product.productName}</h1>
                         </div>
                     </div>
-
 
                     <div class="row">
                         <div class="col">
@@ -98,7 +103,7 @@
                                 </div>
                             </div>
                         </isif>
-<iscomment> ${product.options}@@ </iscomment>
+
                         <div class="product-options">
                             <isif condition="${product.options && product.options.length > 0}">
                                 <isinclude template="product/components/options" />
@@ -153,14 +158,13 @@
 
             <isset name="loopState" value="${{count: 1}}" scope="page" />
             <isinclude template="product/components/descriptionAndDetails" />
-        
-
             <div class="recommendations">
                 <isslot id="product-recommendations-m" description="Recommended products" context="global" context-object="${pdict.product.raw}" />
             </div>
         </div>
-         <div>
-        <isinclude template="product/ratingsAndReviews"/>
-    </div> 
+
+        <div>
+            <isinclude template="product/ratingsAndReviews" />
+        </div>
     </isobject>
 </isdecorate>

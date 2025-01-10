@@ -14,9 +14,9 @@ $(document).ready(function() {
         });
     });
     $('#submitReview').on('click', function() {
-        const productId = $(this).data('productid'); 
-        const reviewText = $('#review').val(); 
-        const rating = $('#rating').val(); 
+        const productId = $(this).data('productid');
+        const reviewText = $('#review').val();
+        const rating = $('#rating').val();
         const orderId = $(this).data('orderid');
         const email = $(this).data('email');
         const form = {
@@ -26,18 +26,17 @@ $(document).ready(function() {
             rating: rating,
             email: email
         };
-        //const submitReviewUrl = "${URLUtils.url('review.submit.url')}";
         $.ajax({
-            url: 'https://zzon-002.dx.commercecloud.salesforce.com/on/demandware.store/Sites-SanikaWadake-Site/default/SubmitReview-start', 
+            url: window.submitReviewUrl,
             type: 'POST',
             dataType: 'json',
             data: form,
             success: function(response) {
                 $('#ratingsModal').modal('hide');
-                alert(response.success ? "${labels.review.success.message}" : "${labels.review.already.submitted.message}");
+                alert(response.success ? response.message : response.message);
             },
             error: function(xhr) {
-                alert("${labels.review.error.message}" + xhr.responseText);
+                alert(window.properties.reviewErrorMessage + xhr.responseText);
             }
         });
     });
