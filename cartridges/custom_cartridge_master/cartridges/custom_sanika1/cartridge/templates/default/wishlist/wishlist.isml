@@ -1,0 +1,5 @@
+<iscontent type="text/javascript" charset="UTF-8" compact="true"/>
+<script>
+    window.wishlistMessages = <isprint value="${JSON.stringify(require('*/cartridge/scripts/wishlist/wishlistMessages').getWishlistMessages())}" encoding="off"/>;
+</script>
+
