@@ -47,8 +47,7 @@ server.get('ShowProducts', function (req, res, next) {
     next();
 });
 // Private method to handle product removal logic
-function removeProductFromWishlist(req, currentCustomer) {
-    var productId = req.form.pid;
+function removeProductFromWishlist(productId, currentCustomer) {
     var success=false;
     Transaction.wrap(function () {
         var wishlists = ProductListMgr.getProductLists(currentCustomer.raw, ProductList.TYPE_WISH_LIST);
@@ -70,6 +69,7 @@ function removeProductFromWishlist(req, currentCustomer) {
 }
 //remove product from wishlist
 server.post('Remove', function (req, res, next) {
+    var productId = req.form.pid;
     var currentCustomer = req.currentCustomer;
     var isRemoved = removeProductFromWishlist(req,currentCustomer);
     if (isRemoved) {
@@ -84,8 +84,7 @@ server.post('Remove', function (req, res, next) {
     next();
 });
 //Add/remove product using toggle from pdp or product tile
-function handleWishlistToggle(req, currentCustomer) {
-    var productId = req.form.pid; // master product ID
+function handleWishlistToggle(productId, currentCustomer) {
     var product = ProductMgr.getProduct(productId);
     var responseMessage = '';
     var success = false;
@@ -143,8 +142,9 @@ function handleWishlistToggle(req, currentCustomer) {
     return { success: success, message: responseMessage };
 }
 server.post('ToggleWishlist', function (req, res, next) {
+    var productId = req.form.pid;
     var currentCustomer = req.currentCustomer;
-    var result=handleWishlistToggle(req, currentCustomer);
+    var result=handleWishlistToggle(productId, currentCustomer);
     res.json({
         success: result.success,
         message: result.message
