@@ -31,7 +31,7 @@ $(document).ready(function () {
                         button.attr('title',window.properties.wishlistAddButton);
                         alert(response.message);
                     } else if (response.message === window.properties.wishlistAddSuccess) {
-                        heartIcon.removeClass('wishlist-added').addClass('wishlist-added');
+                        heartIcon.removeClass('wishlist-removed').addClass('wishlist-added');
                         button.attr('data-wishlist-state', 'true');
                         button.attr('title',window.properties.wishlistRemoveButton);
                         alert(response.message);
