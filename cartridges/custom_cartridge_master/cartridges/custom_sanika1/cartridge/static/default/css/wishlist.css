@@ -1,0 +1,7 @@
+.wishlist-added {
+  color: #e74c3c;
+}
+
+.wishlist-removed {
+  color: rgba(0, 0, 0, 0);
+}

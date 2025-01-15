@@ -7,7 +7,7 @@
     <div class="line-item-header">
         <isif condition=${miniCart}>
             <isinclude template="checkout/productCard/productCardProductNameAndRemove" />
-        <iselse>
+        <iselse/>
             <isinclude template="checkout/productCard/productCardProductName" />
         </isif>
     </div>
@@ -18,13 +18,13 @@
         </div>
         <!-- Individual bundled line items -->
         <isinclude template="cart/productCard/cartProductCardBundledItems" />
-    <iselse>
+    <iselse/>
         <div class="product-line-item-details d-flex flex-row">
             <div class="item-image">
                 <img class="product-image"
                      src="${lineItem.images.small[0].url}"
                      alt="${lineItem.images.small[0].alt}"
-                     title="${lineItem.images.small[0].title}">
+                     title="${lineItem.images.small[0].title}"/>
             </div>
             <div class="item-attributes">
                 <isloop items="${lineItem.variationAttributes}" var="attribute">
@@ -66,7 +66,7 @@
     </isif>
 
     <div>
-        <hr class="line-item-divider">
+        <hr class="line-item-divider"/>
     </div>
 
     <isif condition="${lineItem.productType === 'bundle' && ((pdict.order && !pdict.order.orderStatus) || miniCart)}">
@@ -93,7 +93,7 @@
         <div class="col-4 line-item-quantity">
             <isif condition=${miniCart}>
                 <isinclude template="checkout/productCard/productCardQuantitySelector" />
-            <iselse>
+            <iselse/>
                 <isinclude template="checkout/productCard/productCardQuantityDisplay" />
             </isif>
         </div>

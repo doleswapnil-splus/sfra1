@@ -1,18 +1,18 @@
-
-
 $(document).ready(function () {
     $('.wishlist-icon-button').each(function () {
         var button = $(this);
         var heartIcon = button.find('.fa-heart');
         var isInWishlist = button.attr('data-wishlist-state') === 'true';
         if (isInWishlist) {
-            heartIcon.css('color', 'black');
+            heartIcon.css('color', '#0000');
         } else {
             heartIcon.css('color', '#e74c3c');
         }
     });
+
     $('.wishlist-icon-button').on('click', function (event) {
         event.preventDefault();
+
         var button = $(this);
         var form = button.closest('form');
         var formData = form.serialize();
@@ -24,29 +24,25 @@ $(document).ready(function () {
             dataType: 'json',
             success: function (response) {
                 var heartIcon = button.find('.fa-heart');
-                var isInWishlist = button.attr('data-wishlist-state') === 'true';
                 if (response.success) {
-                    if (response.message ===window.wishlistMessages.wishlistRemoveSuccess){
-                        heartIcon.css('color', '#e74c3c');
+                    if (response.message === window.properties.wishlistRemoveSuccess){
+                        heartIcon.removeClass('wishlist-added').addClass('wishlist-removed');
                         button.attr('data-wishlist-state', 'false');
-                        button.attr('title','Add to Wishlist');
+                        button.attr('title',window.properties.wishlistAddButton);
                         alert(response.message);
-                    } else if (response.message === window.wishlistMessages.wishlistAddSuccess) {
-                        heartIcon.css('color', 'black');
+                    } else if (response.message === window.properties.wishlistAddSuccess) {
+                        heartIcon.removeClass('wishlist-added').addClass('wishlist-added');
                         button.attr('data-wishlist-state', 'true');
-                        button.attr('title','Remove from Wishlist');
+                        button.attr('title',window.properties.wishlistRemoveButton);
                         alert(response.message);
                     }
                 } else {
-                    alert(window.wishlistMessages.wishlistToggleError);
+                    alert(window.properties.wishlistToggleError);
                 }
             },
             error: function (xhr, status, error) {
-                alert(window.wishlistMessages.wishlistToggleError);
+                alert(window.properties.wishlistToggleError);
             }
         });
     });
 });
-
-
-

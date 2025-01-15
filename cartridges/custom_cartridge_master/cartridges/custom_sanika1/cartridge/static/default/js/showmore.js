@@ -1,0 +1,1 @@
+!function(){"use strict";$(document).ready((function(){$("#showMoreBtn").on("click",(function(){var e=$(".hidden-reviews");e.is(":hidden")?(e.show(),$(this).text("Show Less")):(e.hide(),$(this).text("Show More"))}))}))}();

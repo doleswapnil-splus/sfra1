@@ -1,5 +1,5 @@
-
 'use strict';
+
 $(document).ready(function() {
     $('.ratings').on('click', function() {
         const productId = $(this).data('pid');
@@ -13,6 +13,7 @@ $(document).ready(function() {
             email: email
         });
     });
+
     $('#submitReview').on('click', function() {
         const productId = $(this).data('productid');
         const reviewText = $('#review').val();
@@ -26,6 +27,7 @@ $(document).ready(function() {
             rating: rating,
             email: email
         };
+
         $.ajax({
             url: window.submitReviewUrl,
             type: 'POST',

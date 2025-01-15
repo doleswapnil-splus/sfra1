@@ -1,0 +1,5 @@
+<iscontent type="text/javascript" charset="UTF-8" compact="true" />
+<script>
+    window.properties = <isprint value="${JSON.stringify(require('*/cartridge/scripts/constants').properties())}" encoding="off" />;
+    window.submitReviewUrl = "${URLUtils.url('SubmitReview-Start')}";
+</script>
