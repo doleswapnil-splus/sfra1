@@ -1,6 +1,6 @@
 <footer id="footercontent">
     <div class="container">
-     <isinclude template="constants.isml"/>
+     <isinclude template="common/constants.isml"/>
         <div class="footer-container row">
             <div class="footer-item col-sm-3 store">
                 <iscontentasset aid="footer-locate-store" />
