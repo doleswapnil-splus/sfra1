@@ -4,9 +4,10 @@ $(document).ready(function () {
         var heartIcon = button.find('.fa-heart');
         var isInWishlist = button.attr('data-wishlist-state') === 'true';
         if (isInWishlist) {
-            heartIcon.css('color', '#0000');
+            heartIcon.addClass('wishlist-added');
+
         } else {
-            heartIcon.css('color', '#e74c3c');
+            heartIcon.addClass('wishlist-removed');
         }
     });
 
@@ -16,7 +17,7 @@ $(document).ready(function () {
         var button = $(this);
         var form = button.closest('form');
         var formData = form.serialize();
-
+        
         $.ajax({
             url: form.attr('action'),
             type: 'POST',
