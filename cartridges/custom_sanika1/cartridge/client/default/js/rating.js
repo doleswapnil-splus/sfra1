@@ -29,7 +29,7 @@ $(document).ready(function() {
         };
 
         $.ajax({
-            url: window.submitReviewUrl,
+            url: window.urls.SubmitReviewUrl,
             type: 'POST',
             dataType: 'json',
             data: form,

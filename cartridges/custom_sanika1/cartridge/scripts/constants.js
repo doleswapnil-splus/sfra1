@@ -11,6 +11,13 @@ var properties = function () {
     }
 };
 
+var urls = function () {
+    var urls = {
+        SubmitReviewUrl: URLUtils.url('SubmitReview-Start').toString()
+    }
+};
+
 module.exports = {
-    properties : properties
+    properties : properties,
+    urls:urls
 }

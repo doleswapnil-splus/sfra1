@@ -85,8 +85,8 @@ function handleWishlistToggle(productId, currentCustomer) {
     }
     return { success: success, message: responseMessage };
 }
+
 module.exports = {
     removeProductFromWishlist:removeProductFromWishlist,
     handleWishlistToggle:handleWishlistToggle
-
 };
