@@ -5,7 +5,6 @@ $(document).ready(function () {
         var isInWishlist = button.attr('data-wishlist-state') === 'true';
         if (isInWishlist) {
             heartIcon.addClass('wishlist-added');
-
         } else {
             heartIcon.addClass('wishlist-removed');
         }
@@ -17,7 +16,7 @@ $(document).ready(function () {
         var button = $(this);
         var form = button.closest('form');
         var formData = form.serialize();
-        
+
         $.ajax({
             url: form.attr('action'),
             type: 'POST',

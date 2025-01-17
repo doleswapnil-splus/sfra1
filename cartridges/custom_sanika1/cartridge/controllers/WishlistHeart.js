@@ -27,6 +27,7 @@ server.get('ShowProducts', function (req, res, next) {
             if (product.isVariant()) {
                 var variationModel = product.getVariationModel();
                 var productVariationAttributes = variationModel.getProductVariationAttributes();
+
                 collections.forEach(productVariationAttributes, function (attribute) {
                     var attributeValue = variationModel.getSelectedValue(attribute);
                     if (attributeValue) {
@@ -77,4 +78,3 @@ server.post('ToggleWishlist', function (req, res, next) {
 });
 
 module.exports = server.exports();
-
