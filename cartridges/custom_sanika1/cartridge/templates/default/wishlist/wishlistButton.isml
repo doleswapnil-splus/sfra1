@@ -1,0 +1,12 @@
+<div class="wishlist-icon-container">
+    <form action="${URLUtils.url('WishlistHeart-ToggleWishlist')}" method="post" class="wishlist-form" id="wishlistForm">
+        <input type="hidden" name="pid" value="${product.id}" />
+        <button type="submit" class="wishlist-icon-button"
+                data-wishlist-state="false"
+                title="Add to Wishlist"
+                style="background-color: transparent; border: 1px solid white; border-radius: 50%; padding: 10px; cursor: pointer;">
+            <i class="fa fa-heart" style="color: #e74c3c; font-size: 24px;"></i>
+        </button>
+    </form>
+</div>
+
