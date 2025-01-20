@@ -118,5 +118,8 @@
       "pre-commit": "npm run lint",
       "pre-push": "npm run test"
     }
+  },
+  "paths": {
+    "base": "./cartridges/app_storefront_base"
   }
 }

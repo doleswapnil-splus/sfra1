@@ -1,6 +1,7 @@
 'use strict';
 
  var base1 = require('base/product/base');
+ 
  function getAddToCartUrl() {
     return $('.add-to-cart-url').val();
 }
@@ -38,6 +39,7 @@ function handlePostCartAdd(response) {
         }, 5000);
     }
 }
+
 function getOptions($productContainer) {
     var options = $productContainer
         .find('.product-option')
@@ -53,6 +55,7 @@ function getOptions($productContainer) {
         }).toArray();
     return JSON.stringify(options);
 }
+
  function addToCart() {
     $(document).on('click', 'button.add-to-cart, button.add-to-cart-global', function () {
         var addToCartUrl;
@@ -81,7 +84,7 @@ function getOptions($productContainer) {
         {
             pid = base1.getPidValue($(this));
         }
-        //pid = base1.getPidValue($(this));//?null:$(this).closest('.product-detail').data('pid');
+
         var $productContainer = $(this).closest('.product-detail');
         if (!$productContainer.length) {
             $productContainer = $(this).closest('.quick-view-dialog').find('.product-detail');
@@ -92,21 +95,21 @@ function getOptions($productContainer) {
         if (isGiftCertificate) {
             giftCertificateType = $productContainer
                 .find('input[name="giftCertificate"]:checked')
-                .val(); 
+                .val();
         }
         var form = {
             pid: pid,
             pidsObj: pidsObj,
             childProducts: getChildProducts(),
-            quantity: base1.getQuantitySelected($(this))   
+            quantity: base1.getQuantitySelected($(this))
         };
         if (isGiftCertificate) {
-           form.giftCertificateType = giftCertificateType || null; // Default to null if not defined
+           form.giftCertificateType = giftCertificateType || null;
            form.isGiftCertificate=true;
            form.firstName = $('#firstName').val() || null;
            form.lastName = $('#lastName').val() || null;
            form.email = $('#email').val() || null;
-        } 
+        }
         if (!$('.bundle-item').length) {
             form.options = getOptions($productContainer);
         }
@@ -129,5 +132,6 @@ function getOptions($productContainer) {
         }
     });
 }
+
 base1.addToCart=addToCart;
 module.exports=base1;

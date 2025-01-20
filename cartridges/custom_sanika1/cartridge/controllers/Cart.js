@@ -5,7 +5,9 @@
  */
 var server = require('server');
 server.extend(module.superModule);
+
 server.replace('AddProduct', function (req, res, next) {
+
     var BasketMgr = require('dw/order/BasketMgr');
     var Resource = require('dw/web/Resource');
     var URLUtils = require('dw/web/URLUtils');
@@ -18,7 +20,7 @@ server.replace('AddProduct', function (req, res, next) {
     var currentBasket = BasketMgr.getCurrentOrNewBasket();
     var previousBonusDiscountLineItems = currentBasket.getBonusDiscountLineItems();
     var productId = req.form.pid;
-    var isGiftCertificate = req.form.isGiftCertificate; 
+    var isGiftCertificate = req.form.isGiftCertificate;
     var giftCertificateType = req.form.giftCertificateType || null;
     var firstName=req.form.firstName;
     var lastName=req.form.lastName;
@@ -45,8 +47,8 @@ server.replace('AddProduct', function (req, res, next) {
                     firstName,
                     lastName,
                     email,
-                    isGiftCertificate, //true
-                    giftCertificateType //email
+                    isGiftCertificate,
+                    giftCertificateType
                 );
             } else {
                 // product set
@@ -121,6 +123,7 @@ server.replace('AddProduct', function (req, res, next) {
 
     next();
 });
+
 server.replace(
     'Show',
     function (req, res, next) {
@@ -156,4 +159,5 @@ server.replace(
         next();
     }
 );
+
 module.exports = server.exports();

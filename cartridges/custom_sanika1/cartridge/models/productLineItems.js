@@ -57,7 +57,7 @@ function createProductLineItemsObject(allLineItems, view) {
 
             var newLineItem =require('*/cartridge/scripts/factories/product').get(params);
             newLineItem.isGiftCertificate = item.custom.isGiftCertificate || false;
-            newLineItem.giftCertificateType = item.custom.giftCertificateType; 
+            newLineItem.giftCertificateType = item.custom.giftCertificateType;
             lineItems.push(newLineItem);
         }
     });
@@ -84,7 +84,6 @@ function ProductLineItems(productLineItems, view) {
     }
 }
 
-// Expose static methods from the base class
 ProductLineItems.getTotalQuantity = base.getTotalQuantity;
 module.exports = ProductLineItems;
 

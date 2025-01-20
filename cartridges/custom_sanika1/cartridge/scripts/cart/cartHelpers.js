@@ -1,5 +1,6 @@
 
 'use strict';
+
 var base = module.superModule;
 var ProductMgr = require('dw/catalog/ProductMgr');
 var productHelper = require('*/cartridge/scripts/helpers/productHelpers');
@@ -12,6 +13,7 @@ var Transaction = require('dw/system/Transaction');
  * @returns {boolean} - True if all products have giftCertificateType='email', otherwise false
  */
 function checkGiftCertificateType(basket) {
+    
     var productLineItems = basket.productLineItems.iterator();
     var hasEmailGiftCertificate = false;
     var hasNonEmailGiftCertificate = false;
@@ -25,7 +27,6 @@ function checkGiftCertificateType(basket) {
         } else {
             hasNonEmailGiftCertificate = true;
         }
-
         // If there is a mix of email and non-email products, return false
         if (hasEmailGiftCertificate && hasNonEmailGiftCertificate) {
             return false;
@@ -104,7 +105,7 @@ function addProductToCart(currentBasket, productId, quantity, childProducts, opt
         }
     } else {
         var productLineItem;
-       
+
         productLineItem = base.addLineItem(
             currentBasket,
             product,
@@ -125,6 +126,7 @@ function addProductToCart(currentBasket, productId, quantity, childProducts, opt
 
     return result;
 }
+
 base.checkGiftCertificateType = checkGiftCertificateType;
 base.addProductToCart=addProductToCart;
 module.exports=base;

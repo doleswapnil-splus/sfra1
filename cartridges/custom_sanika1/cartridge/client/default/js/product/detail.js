@@ -2,7 +2,6 @@
 
  var base = require('base/product/detail');
  var base1 = require('./base');
- //var base1 = require('base/product/base');
 
 /**
  * Enable/disable UI elements
@@ -11,22 +10,22 @@
 
 function updateGiftCerticate()
 {
-    $('body').on('change', 'input[name="giftCertificate"]', function (event) 
+    $('body').on('change', 'input[name="giftCertificate"]', function (event)
     {
         const $paperRadio = $('#paperGiftCertificate');
         const $personalizeButton = $('#personalizeButton');
         const $addToCart=$('#add-to-cart');
 
         if ($paperRadio.is(':checked')) {
-            
-            $personalizeButton.hide(); 
+
+            $personalizeButton.hide();
             $addToCart.show();
         }
          else if ($('#emailGiftCertificate').is(':checked')){
-            
+
             $personalizeButton.show();
-            $addToCart.hide(); 
-            
+            $addToCart.hide();
+
         }
         localStorage.setItem('giftCertificateType', $(this).val());
     });
@@ -47,7 +46,6 @@ function updateGiftCerticate()
 
 
 }
-
 function updateAddToCart () {
     $('body').on('product:updateAddToCart', function (e, response) {
         $('button.add-to-cart', response.$productContainer).attr(
@@ -65,16 +63,14 @@ function updateAddToCart () {
         $('#personalizeButton').attr('disabled', !enable);
     });
 }
-
 function closeModal()
 {
     $('button.add-to-cart').on('click', function (e) {
-        e.preventDefault(); 
-        $('#chooseProductModal').modal('hide'); 
+        e.preventDefault();
+        $('#chooseProductModal').modal('hide');
     });
-    
-}
 
+}
 function emailValidation()
 {
         $(document).ready(function() {
@@ -84,20 +80,19 @@ function emailValidation()
             const firstNameInput = $('#firstName');
             const lastNameInput = $('#lastName');
             const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    
+
             emailError.hide();
             addToCartButton.prop('disabled', true); // Disable button initially
 
             $('#chooseProductModal').on('show.bs.modal', function () {
                 addToCartButton.prop('disabled', true);
-                emailInput.val('');  
-                firstNameInput.val('');  
-                lastNameInput.val('');  
-                emailError.hide(); 
+                emailInput.val('');
+                firstNameInput.val('');
+                lastNameInput.val('');
+                emailError.hide();
             });
-    
+
             function validateInputs() {
-              
                 if (
                     firstNameInput.val().trim() !== '' &&
                     lastNameInput.val().trim() !== '' &&
@@ -108,24 +103,26 @@ function emailValidation()
                     addToCartButton.prop('disabled', true);
                 }
             }
+
             firstNameInput.on('input', validateInputs);
             lastNameInput.on('input', validateInputs);
             emailInput.on('input', function() {
-              
-                emailError.toggle(!emailRegex.test(emailInput.val())); 
-                validateInputs(); 
+
+                emailError.toggle(!emailRegex.test(emailInput.val()));
+                validateInputs();
             });
-    
+
             $('body').on('click', '#addToCart', function (e) {
                 e.preventDefault();
-    
+
                 if (emailRegex.test(emailInput.val())) {
                     console.log('Valid email:', emailInput.val());
-                    
+
                 }
             });
-        });   
+        });
 }
+
 base.addToCart= base1.addToCart;
 base.updateGiftCerticate=updateGiftCerticate;
 base.closeModal=closeModal;
