@@ -124,40 +124,4 @@ server.replace('AddProduct', function (req, res, next) {
     next();
 });
 
-server.replace(
-    'Show',
-    function (req, res, next) {
-        var BasketMgr = require('dw/order/BasketMgr');
-        var Transaction = require('dw/system/Transaction');
-        var CartModel = require('*/cartridge/models/cart');
-        var cartHelper = require('*/cartridge/scripts/cart/cartHelpers');
-        var reportingUrlsHelper = require('*/cartridge/scripts/reportingUrls');
-        var basketCalculationHelpers = require('*/cartridge/scripts/helpers/basketCalculationHelpers');
-
-        var currentBasket = BasketMgr.getCurrentBasket();
-        var reportingURLs;
-
-        if (currentBasket) {
-            Transaction.wrap(function () {
-                if (currentBasket.currencyCode !== req.session.currency.currencyCode) {
-                    currentBasket.updateCurrency();
-                }
-                cartHelper.ensureAllShipmentsHaveMethods(currentBasket);
-
-                basketCalculationHelpers.calculateTotals(currentBasket);
-            });
-        }
-
-        if (currentBasket && currentBasket.allLineItems.length) {
-            reportingURLs = reportingUrlsHelper.getBasketOpenReportingURLs(currentBasket);
-        }
-
-        res.setViewData({ reportingURLs: reportingURLs });
-
-        var basketModel = new CartModel(currentBasket);
-        res.render('cart/cart', basketModel);
-        next();
-    }
-);
-
 module.exports = server.exports();

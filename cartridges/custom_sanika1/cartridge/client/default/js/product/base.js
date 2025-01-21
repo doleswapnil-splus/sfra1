@@ -1,7 +1,6 @@
 'use strict';
 
  var base1 = require('base/product/base');
- 
  function getAddToCartUrl() {
     return $('.add-to-cart-url').val();
 }
