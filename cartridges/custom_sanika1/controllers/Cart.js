@@ -5,6 +5,7 @@
  */
 var server = require('server');
 server.extend(module.superModule);
+
 server.replace('AddProduct', function (req, res, next) {
     var BasketMgr = require('dw/order/BasketMgr');
     var Resource = require('dw/web/Resource');
@@ -14,15 +15,15 @@ server.replace('AddProduct', function (req, res, next) {
     var ProductLineItemsModel = require('*/cartridge/models/productLineItems');
     var cartHelper = require('*/cartridge/scripts/cart/cartHelpers');
     var basketCalculationHelpers = require('*/cartridge/scripts/helpers/basketCalculationHelpers');
-    
+
     var currentBasket = BasketMgr.getCurrentOrNewBasket();
     var previousBonusDiscountLineItems = currentBasket.getBonusDiscountLineItems();
     var productId = req.form.pid;
-    var isGiftCertificate = req.form.isGiftCertificate; 
+    var isGiftCertificate = req.form.isGiftCertificate;
     var giftCertificateType = req.form.giftCertificateType || null;
-    var firstName=req.form.firstName;
-    var lastName=req.form.lastName;
-    var email=req.form.email;
+    var firstName = req.form.firstName;
+    var lastName = req.form.lastName;
+    var email = req.form.email;
     var childProducts = Object.hasOwnProperty.call(req.form, 'childProducts')
         ? JSON.parse(req.form.childProducts)
         : [];
@@ -44,11 +45,11 @@ server.replace('AddProduct', function (req, res, next) {
                     null,
                     null,
                     null,
-                    isGiftCertificate, //email
-                    giftCertificateType //true
+                    isGiftCertificate,
+                    giftCertificateType
                 );
             } else {
-                // product set
+                // Product set
                 pidsObj = JSON.parse(req.form.pidsObj);
                 result = {
                     error: false,
@@ -80,6 +81,7 @@ server.replace('AddProduct', function (req, res, next) {
             }
         });
     }
+
     var quantityTotal = ProductLineItemsModel.getTotalQuantity(currentBasket.productLineItems);
     var cartModel = new CartModel(currentBasket);
     var urlObject = {
@@ -93,6 +95,7 @@ server.replace('AddProduct', function (req, res, next) {
         urlObject,
         result.uuid
     );
+
     if (newBonusDiscountLineItem) {
         var allLineItems = currentBasket.allProductLineItems;
         var collections = require('*/cartridge/scripts/util/collections');
@@ -105,7 +108,9 @@ server.replace('AddProduct', function (req, res, next) {
             }
         });
     }
+
     var reportingURL = cartHelper.getReportingUrlAddToCart(currentBasket, result.error);
+
     res.json({
         reportingURL: reportingURL,
         quantityTotal: quantityTotal,
@@ -119,34 +124,35 @@ server.replace('AddProduct', function (req, res, next) {
 
     next();
 });
-server.replace(
-    'Show',
-    function (req, res, next) {
-        var BasketMgr = require('dw/order/BasketMgr');
-        var Transaction = require('dw/system/Transaction');
-        var CartModel = require('*/cartridge/models/cart');
-        var cartHelper = require('*/cartridge/scripts/cart/cartHelpers');
-        var reportingUrlsHelper = require('*/cartridge/scripts/reportingUrls');
-        var basketCalculationHelpers = require('*/cartridge/scripts/helpers/basketCalculationHelpers');
-        var currentBasket = BasketMgr.getCurrentBasket();
-        var reportingURLs;
-        if (currentBasket) {
-            Transaction.wrap(function () {
-                if (currentBasket.currencyCode !== req.session.currency.currencyCode) {
-                    currentBasket.updateCurrency();
-                }
-                cartHelper.ensureAllShipmentsHaveMethods(currentBasket);
 
-                basketCalculationHelpers.calculateTotals(currentBasket);
-            });
-        }
-        if (currentBasket && currentBasket.allLineItems.length) {
-            reportingURLs = reportingUrlsHelper.getBasketOpenReportingURLs(currentBasket);
-        }
-        res.setViewData({ reportingURLs: reportingURLs });
-        var basketModel = new CartModel(currentBasket);
-        res.render('cart/cart', basketModel);
-        next();
+server.replace('Show', function (req, res, next) {
+    var BasketMgr = require('dw/order/BasketMgr');
+    var Transaction = require('dw/system/Transaction');
+    var CartModel = require('*/cartridge/models/cart');
+    var cartHelper = require('*/cartridge/scripts/cart/cartHelpers');
+    var reportingUrlsHelper = require('*/cartridge/scripts/reportingUrls');
+    var basketCalculationHelpers = require('*/cartridge/scripts/helpers/basketCalculationHelpers');
+    var currentBasket = BasketMgr.getCurrentBasket();
+    var reportingURLs;
+
+    if (currentBasket) {
+        Transaction.wrap(function () {
+            if (currentBasket.currencyCode !== req.session.currency.currencyCode) {
+                currentBasket.updateCurrency();
+            }
+            cartHelper.ensureAllShipmentsHaveMethods(currentBasket);
+            basketCalculationHelpers.calculateTotals(currentBasket);
+        });
     }
-);
+
+    if (currentBasket && currentBasket.allLineItems.length) {
+        reportingURLs = reportingUrlsHelper.getBasketOpenReportingURLs(currentBasket);
+    }
+
+    res.setViewData({ reportingURLs: reportingURLs });
+    var basketModel = new CartModel(currentBasket);
+    res.render('cart/cart', basketModel);
+    next();
+});
+
 module.exports = server.exports();

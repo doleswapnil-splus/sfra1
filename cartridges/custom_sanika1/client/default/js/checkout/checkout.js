@@ -1,11 +1,16 @@
 'use strict';
 
 var base = require('base/checkout/checkout');
+
 function initialize() {
-   
-    base.members.currentStage = base.checkoutStages
-        .indexOf($('.data-checkout-stage').data('checkout-stage'));
-    $(base.plugin).attr('data-checkout-stage', base.checkoutStages[base.members.currentStage]);
+    base.members.currentStage = base.checkoutStages.indexOf(
+        $('.data-checkout-stage').data('checkout-stage')
+    );
+
+    $(base.plugin).attr(
+        'data-checkout-stage',
+        base.checkoutStages[base.members.currentStage]
+    );
 
     $('body').on('click', '.submit-customer-login', function (e) {
         e.preventDefault();
@@ -16,12 +21,12 @@ function initialize() {
         var giftCertificateItems = $('.cart-items').filter(function () {
             return $(this).data('gift-certificate-type') === 'email';
         });
-    
+
         var nonGiftCertificateItems = $('.cart-items').filter(function () {
             var giftCertificateType = $(this).data('gift-certificate-type');
             return giftCertificateType === 'paper' || giftCertificateType === 'none';
         });
-    
+
         if (giftCertificateItems.length > 0 && nonGiftCertificateItems.length === 0) {
             // Only email gift certificates in the cart
             members.gotoStage('payment');
@@ -31,6 +36,7 @@ function initialize() {
             members.nextStage();
         }
     });
+
     // Handle Payment option selection
     $('input[name$="paymentMethod"]', base.plugin).on('change', function () {
         $('.credit-card-form').toggle($(this).val() === 'CREDIT_CARD');
@@ -57,7 +63,6 @@ function initialize() {
         base.members.gotoStage('payment');
     });
 
-    
     base.updateUrl(base.members.currentStage);
 
     // Listen for forward/back button press and move to the correct checkout-stage
@@ -74,5 +79,6 @@ function initialize() {
 
     base.plugin.data('formData', base.formData);
 }
+
 base.initialize = initialize;
 module.exports = base;

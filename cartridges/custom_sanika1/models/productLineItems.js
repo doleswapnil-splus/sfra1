@@ -1,7 +1,5 @@
 'use strict';
 var base = module.superModule;
-
-//var baseProductLineItems = require('*/cartridge/scripts/lineItems/ProductLineItems');
 var URLUtils = require('dw/web/URLUtils');
 var Resource = require('dw/web/Resource');
 
@@ -34,7 +32,10 @@ function createProductLineItemsObject(allLineItems, view) {
                     ]
                 },
                 isGiftCertificate: item.custom.isGiftCertificate,
-                giftCertificateType: item.custom.giftCertificateType 
+                giftCertificateType: item.custom.giftCertificateType,
+                firstName: item.custom.firstName,
+                lastName: item.custom.lastName,
+                email: item.custom.email
             });
         } else {
             // Handle standard products
@@ -55,9 +56,9 @@ function createProductLineItemsObject(allLineItems, view) {
                 options: options
             };
 
-            var newLineItem =require('*/cartridge/scripts/factories/product').get(params);
+            var newLineItem = require('*/cartridge/scripts/factories/product').get(params);
             newLineItem.isGiftCertificate = item.custom.isGiftCertificate || false;
-            newLineItem.giftCertificateType = item.custom.giftCertificateType; 
+            newLineItem.giftCertificateType = item.custom.giftCertificateType;
             lineItems.push(newLineItem);
         }
     });
@@ -84,6 +85,7 @@ function ProductLineItems(productLineItems, view) {
     }
 }
 
-// Expose static methods from the base class
+
 ProductLineItems.getTotalQuantity = base.getTotalQuantity;
+
 module.exports = ProductLineItems;

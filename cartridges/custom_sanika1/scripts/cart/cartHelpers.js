@@ -1,4 +1,3 @@
-
 'use strict';
 var base = module.superModule;
 var ProductMgr = require('dw/catalog/ProductMgr');
@@ -31,9 +30,11 @@ function checkGiftCertificateType(basket) {
             return false;
         }
     }
+
     // Return true only if all items are email gift certificates
     return hasEmailGiftCertificate && !hasNonEmailGiftCertificate;
 }
+
 /**
  * Adds a product to the cart. If the product is already in the cart it increases the quantity of
  * that product.
@@ -42,10 +43,14 @@ function checkGiftCertificateType(basket) {
  * @param {number} quantity - the number of products to the cart
  * @param {string[]} childProducts - the products' sub-products
  * @param {SelectedOption[]} options - product options
- *  @return {Object} returns an error object
+ * @param {string} firstName - The first name for the gift certificate
+ * @param {string} lastName - The last name for the gift certificate
+ * @param {string} email - The email address for the gift certificate
+ * @param {boolean} isGiftCertificate - Whether the product is a gift certificate
+ * @param {string} giftCertificateType - The type of the gift certificate
+ * @returns {Object} returns an error object
  */
-function addProductToCart(currentBasket, productId, quantity, childProducts, options,firstName,
-    lastName,email,isGiftCertificate, giftCertificateType) {
+function addProductToCart(currentBasket, productId, quantity, childProducts, options, firstName, lastName, email, isGiftCertificate, giftCertificateType) {
     var availableToSell;
     var defaultShipment = currentBasket.defaultShipment;
     var perpetual;
@@ -61,28 +66,32 @@ function addProductToCart(currentBasket, productId, quantity, childProducts, opt
     };
     var totalQtyRequested = 0;
     var canBeAdded = false;
+
     if (product.bundle) {
         canBeAdded = base.checkBundledProductCanBeAdded(childProducts, productLineItems, quantity);
     } else {
         totalQtyRequested = quantity + base.getQtyAlreadyInCart(productId, productLineItems);
         perpetual = product.availabilityModel.inventoryRecord ? product.availabilityModel.inventoryRecord.perpetual : null;
+
         if (product.availabilityModel.inventoryRecord) {
-        canBeAdded = (perpetual
-            || totalQtyRequested <= product.availabilityModel.inventoryRecord.ATS.value);
+            canBeAdded = (perpetual || totalQtyRequested <= product.availabilityModel.inventoryRecord.ATS.value);
         }
     }
+
     if (!canBeAdded) {
         result.error = true;
         result.message = Resource.msgf(
             'error.alert.selected.quantity.cannot.be.added.for',
             'product',
             null,
-            product.product.availabilityModel.inventoryRecord? product.availabilityModel.inventoryRecord.ATS.value: null,
+            product.availabilityModel.inventoryRecord ? product.availabilityModel.inventoryRecord.ATS.value : null,
             product.name
         );
         return result;
     }
+
     productInCart = base.getExistingProductLineItemInCart(product, productId, productLineItems, childProducts, options);
+
     if (productInCart) {
         productQuantityInCart = productInCart.quantity.value;
         quantityToSet = quantity ? quantity + productQuantityInCart : productQuantityInCart + 1;
@@ -107,20 +116,26 @@ function addProductToCart(currentBasket, productId, quantity, childProducts, opt
             optionModel,
             defaultShipment
         );
+
         var customizations = JSON.stringify({
-            First_Name:firstName,
-            Last_Name:lastName,
-            Email_Address:email
+            First_Name: firstName,
+            Last_Name: lastName,
+            Email_Address: email
         });
+
         Transaction.wrap(function () {
             productLineItem.custom.Customisation = customizations;
             productLineItem.custom.isGiftCertificate = Boolean(isGiftCertificate);
             productLineItem.custom.giftCertificateType = giftCertificateType;
         });
+
         result.uuid = productLineItem.UUID;
     }
+
     return result;
 }
+
 base.checkGiftCertificateType = checkGiftCertificateType;
-base.addProductToCart=addProductToCart;
-module.exports=base;
+base.addProductToCart = addProductToCart;
+
+module.exports = base;
