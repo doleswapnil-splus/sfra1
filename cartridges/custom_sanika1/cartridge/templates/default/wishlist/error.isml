@@ -1,0 +1,6 @@
+<isif condition="${pdict.errorMessage}">
+    <div class="alert alert-danger">
+        <h4 class="alert-heading">${Resource.msg('wishlist.error', 'wishlist', null)} </h4>
+        <p>${pdict.errorMessage}</p>
+    </div>
+</isif>

@@ -29,7 +29,7 @@ module.exports = [
         entry: jsFiles,
         output: {
             path: path.resolve(
-                './cartridges/app_storefront_base/cartridge/static'
+                './cartridges/custom_sanika1/cartridge/static'
             ),
             filename: '[name].js'
         },
@@ -58,7 +58,7 @@ module.exports = [
         entry: scssFiles,
         output: {
             path: path.resolve(
-                './cartridges/app_storefront_base/cartridge/static'
+                './cartridges/custom_sanika1/cartridge/static'
             )
         },
         module: {

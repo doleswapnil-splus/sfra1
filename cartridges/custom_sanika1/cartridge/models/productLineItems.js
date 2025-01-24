@@ -12,7 +12,6 @@ var Resource = require('dw/web/Resource');
  */
 function createProductLineItemsObject(allLineItems, view) {
     var lineItems = [];
-
     allLineItems.toArray().forEach(function (item) {
         // Handle unassigned product categories
         if (!item.product) {
@@ -33,9 +32,9 @@ function createProductLineItemsObject(allLineItems, view) {
                 },
                 isGiftCertificate: item.custom.isGiftCertificate,
                 giftCertificateType: item.custom.giftCertificateType,
-                firstName: item.custom.firstName,
-                lastName: item.custom.lastName,
-                email: item.custom.email
+                firstName:item.custom.firstName,
+                lastName:item.custom.lastName,
+                email:item.custom.email
             });
         } else {
             // Handle standard products
@@ -56,7 +55,7 @@ function createProductLineItemsObject(allLineItems, view) {
                 options: options
             };
 
-            var newLineItem = require('*/cartridge/scripts/factories/product').get(params);
+            var newLineItem =require('*/cartridge/scripts/factories/product').get(params);
             newLineItem.isGiftCertificate = item.custom.isGiftCertificate || false;
             newLineItem.giftCertificateType = item.custom.giftCertificateType;
             lineItems.push(newLineItem);
@@ -85,7 +84,7 @@ function ProductLineItems(productLineItems, view) {
     }
 }
 
-
 ProductLineItems.getTotalQuantity = base.getTotalQuantity;
-
 module.exports = ProductLineItems;
+
+
