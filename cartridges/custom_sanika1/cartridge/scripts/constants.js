@@ -1,7 +1,10 @@
 'use strict';
 
+var Resource = require('dw/web/Resource');
+var URLUtils = require('dw/web/URLUtils');
+
 var properties = function () {
-    var properties = {
+   return {
         wishlistAddSuccess: Resource.msg('wishlist.toggle.success.add', 'wishlist', null),
         wishlistRemoveSuccess: Resource.msg('wishlist.toggle.success.remove', 'wishlist', null),
         wishlistToggleError: Resource.msg('wishlist.toggle.error', 'wishlist', null),
@@ -12,7 +15,7 @@ var properties = function () {
 };
 
 var urls = function () {
-    var urls = {
+    return {
         SubmitReviewUrl: URLUtils.url('SubmitReview-Start').toString()
     }
 };

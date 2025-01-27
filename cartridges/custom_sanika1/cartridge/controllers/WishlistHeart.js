@@ -8,7 +8,7 @@ var ProductMgr = require('dw/catalog/ProductMgr');
 var Transaction = require('dw/system/Transaction');
 var collections = require('*/cartridge/scripts/util/collections');
 var Resource = require('dw/web/Resource');
-var wishlistMessages = require('*/cartridge/scripts/wishlist/wishlistMessages');
+var wishlistHelpers = require('*/cartridge/scripts/wishlist/wishlistHelpers');
 
 server.get('ShowProducts', function (req, res, next) {
     var currentCustomer = req.currentCustomer.raw;
@@ -53,7 +53,7 @@ server.get('ShowProducts', function (req, res, next) {
 server.post('Remove', function (req, res, next) {
     var productId = req.form.pid;
     var currentCustomer = req.currentCustomer;
-    var isRemoved = wishlistMessages.removeProductFromWishlist(productId,currentCustomer);
+    var isRemoved = wishlistHelpers.removeProductFromWishlist(productId,currentCustomer);
     if (isRemoved) {
         res.render('wishlist/success', {
             successMessage:Resource.msg('wishlist.remove.success', 'wishlist', null)
@@ -69,7 +69,7 @@ server.post('Remove', function (req, res, next) {
 server.post('ToggleWishlist', function (req, res, next) {
     var productId = req.form.pid;
     var currentCustomer = req.currentCustomer;
-    var result=wishlistMessages.handleWishlistToggle(productId, currentCustomer);
+    var result=wishlistHelpers.handleWishlistToggle(productId, currentCustomer);
     res.json({
         success: result.success,
         message: result.message

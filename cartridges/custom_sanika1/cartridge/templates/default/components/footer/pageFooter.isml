@@ -29,6 +29,6 @@
                 <iscontentasset aid="footer-copy" />
             </div>
         </div>
-          <isinclude template="common/constants.isml" />
+          <isinclude template="common/constants" />
     </div>
 </footer>

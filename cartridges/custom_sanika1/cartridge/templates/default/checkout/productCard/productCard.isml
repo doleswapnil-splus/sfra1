@@ -44,7 +44,7 @@
                            data-email="${pdict.order.orderEmail}"
                            data-orderno="${pdict.order.orderNumber}"
                            data-pid="${lineItem.id}">
-                            ${Resource.msg('card.modal.rating.title', 'custom', null)}
+                            ${Resource.msg('card.modal.rating.title', 'ratingsAndReview', null)}
                         </a>
                         <isinclude template="account/order/RatingsAndReviewsModel" />
                     </div>

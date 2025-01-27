@@ -2,4 +2,5 @@
 <script>
     window.properties = <isprint value="${JSON.stringify(require('*/cartridge/scripts/constants').properties())}" encoding="off" />;
     window.urls = <isprint value="${JSON.stringify(require('*/cartridge/scripts/constants').urls())}" encoding="off" />;
+    //window.submitReviewUrl = 'URLUtils.url("SubmitReview-Start")';
 </script>
