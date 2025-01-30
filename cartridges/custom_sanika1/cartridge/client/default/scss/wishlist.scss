@@ -1,9 +1,13 @@
 .wishlist-added {
-    color: #e74c3c;
+    color:#000;
   }
 
   .wishlist-removed {
-    color: #0000;
+    color:rgb(231, 135, 135);
+
+    &.fa-heart:before {
+        color: white;
+    }
   }
   .wishlist-grid {
     display: grid;
@@ -84,4 +88,10 @@
 
 .add-to-cart-container {
     text-align: center;
+}
+.wishlist-icon-container {
+    display: block !important;
+    position: absolute;
+    top: 10px; /* Adjust as needed */
+    z-index: 9999; /* Make sure it's visible */
 }

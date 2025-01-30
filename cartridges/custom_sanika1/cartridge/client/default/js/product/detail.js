@@ -54,7 +54,7 @@ function updateAddToCart() {
             return $(item).data('available') && $(item).data('ready-to-order');
         });
 
-        module.exports.base.methods.updateAddToCartEnableDisableOtherElements(!enable);
+        base.methods.updateAddToCartEnableDisableOtherElements(!enable);
         $('#personalizeButton').attr('disabled', !enable);
     });
 }

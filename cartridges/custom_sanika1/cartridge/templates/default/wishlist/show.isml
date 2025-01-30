@@ -1,7 +1,7 @@
 <isdecorate template="common/layout/page">
     <isscript>
         var assets = require('*/cartridge/scripts/assets');
-        assets.addJs('/js/productDetail.js');
+        assets.addJs('/js/whishlistHeart.js');
         assets.addCss('/css/wishlist.css');
     </isscript>
 
@@ -12,8 +12,8 @@
             <div class="wishlist-grid">
                 <isloop items="${pdict.wishlistItems}" var="item">
                     <div class="product-tile wishlist">
-                        <p>${Resource.msg('wishlist.productID', 'wishlist', null)}${item.productListItem.productID}</p>
-                        <p>${Resource.msg('wishlist.masterID', 'wishlist', null)}${item.productListItem.product.masterProduct.ID}</p>
+                        <iscomment> <p>${Resource.msg('wishlist.productID', 'wishlist', null)}${item.productListItem.productID}</p>
+                        <p>${Resource.msg('wishlist.masterID', 'wishlist', null)}${item.productListItem.product.masterProduct.ID}</p> </iscomment>
 
                         <!-- Product Image -->
                         <div class="product-image-container">
@@ -49,13 +49,15 @@
                             </div>
 
                             <!-- Remove Button -->
-                            <div class="button-container">
+                             <div class="button-container">
                                 <form action="${URLUtils.url('WishlistHeart-Remove')}" method="post" class="remove-form">
                                     <input type="hidden" name="pid" value="${item.productListItem.product.masterProduct.ID}" />
-                                    <button type="submit" class="remove-button">${Resource.msg('wishlist.remove.button', 'wishlist', null)}</button>
+                                    <button type="button" class="remove-button">
+                                    ${Resource.msg('wishlist.remove.button', 'wishlist', null)}
+                                    </button>
                                 </form>
 
-                                <div class="container product-detail product-wrapper wishlistpage" data-pid="${item.product.masterProduct.ID}">
+                                <iscomment> <div class="container product-detail product-wrapper wishlistpage" data-pid="${item.product.masterProduct.ID}">
                                     <input type="hidden" class="add-to-cart-url" value="${pdict.addToCartUrl}">
                                     <button class="add-to-cart btn btn-primary"
                                             data-toggle="modal" data-target="#chooseBonusProductModal"
@@ -64,7 +66,7 @@
                                         <i class="fa fa-shopping-bag"></i>
                                         ${Resource.msg('button.addtocart', 'common', null)}
                                     </button>
-                                </div>
+                                </div> </iscomment>
                             </div>
                         </div>
                     </div>

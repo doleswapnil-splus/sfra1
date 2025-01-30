@@ -5,6 +5,7 @@
         assets.addJs('/js/productDetail.js');
         assets.addJs('/js/whishlistHeart.js');
         assets.addCss('/css/product/detail.css');
+        assets.addCss('/css/wishlist.css');
     </isscript>
 
     <isset name="product" value="${pdict.product}" scope="page" />
@@ -28,26 +29,15 @@
                 </div>
             </div>
 
-            <!-- Wishlist Button -->
-            <div class="wishlist-icon-container">
-                <form action="${URLUtils.url('WishlistHeart-ToggleWishlist')}" method="post" class="wishlist-form" id="wishlistForm">
-                    <input type="hidden" name="pid" value="${product.id}" />
-                    <button type="submit"
-                            class="wishlist-icon-button"
-                            data-wishlist-state="false"
-                            title="Add to Wishlist"
-                            style="background-color: transparent;
-                                   border: 1px solid white;
-                                   border-radius: 50%;
-                                   padding: 10px;
-                                   cursor: pointer;">
-                        <i class="fa fa-heart"
-                           style="color: #e74c3c;
-                                  font-size: 24px;"></i>
-                    </button>
-                </form>
-            </div>
 
+            <div class="attributes">
+                <!-- Wishlist Button -->
+                 <div class="row">
+                      <div class="col">
+                          <isinclude template="wishlist/wishlistButton" />
+                      </div>
+                </div>
+            </div>
             <div class="row">
                 <!-- Product Images Carousel -->
                 <isinclude template="product/components/imageCarousel" />

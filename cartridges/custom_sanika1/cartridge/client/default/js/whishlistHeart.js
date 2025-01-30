@@ -1,14 +1,3 @@
-$(document).ready(function () {
-    $('.wishlist-icon-button').each(function () {
-        var button = $(this);
-        var heartIcon = button.find('.fa-heart');
-        var isInWishlist = button.attr('data-wishlist-state') === 'true';
-        if (isInWishlist) {
-            heartIcon.addClass('wishlist-added');
-        } else {
-            heartIcon.addClass('wishlist-removed');
-        }
-    });
 
     $('.wishlist-icon-button').on('click', function (event) {
         event.preventDefault();
@@ -45,4 +34,3 @@ $(document).ready(function () {
             }
         });
     });
-});
