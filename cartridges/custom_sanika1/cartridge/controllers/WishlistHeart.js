@@ -10,6 +10,23 @@ var collections = require('*/cartridge/scripts/util/collections');
 var Resource = require('dw/web/Resource');
 var wishlistHelpers = require('*/cartridge/scripts/wishlist/wishlistHelpers');
 
+// server.post('Remove', function (req, res, next) {
+//     var productId = req.form.pid;
+//     var currentCustomer = req.currentCustomer;
+//     var result = wishlistHelpers.removeProductFromWishlist(productId,currentCustomer);
+//     if (result.success) {
+//         res.json({
+//             success: true,
+//             message: result.message
+//         });
+//     } else {
+//         res.json({
+//             success: false,
+//             message: result.message
+//         });
+//     }
+//     next();
+// });
 server.get('ShowProducts', function (req, res, next) {
     var currentCustomer = req.currentCustomer.raw;
     if (currentCustomer) {
@@ -53,16 +70,11 @@ server.get('ShowProducts', function (req, res, next) {
 server.post('Remove', function (req, res, next) {
     var productId = req.form.pid;
     var currentCustomer = req.currentCustomer;
-    var isRemoved = wishlistHelpers.removeProductFromWishlist(productId,currentCustomer);
-    if (isRemoved) {
-        res.render('wishlist/success', {
-            successMessage:Resource.msg('wishlist.remove.success', 'wishlist', null)
-        });
-    } else {
-        res.render('wishlist/error', {
-            errorMessage:Resource.msg('wishlist.remove.error', 'wishlist', null)
-        });
-    }
+    var success = wishlistHelpers.removeProductFromWishlist(productId,currentCustomer);
+    res.json({
+        success: success,
+        message: success ? 'Product removed successfully' : 'Error: Unable to remove product from wishlist.'
+    });
     next();
 });
 
@@ -75,6 +87,16 @@ server.post('ToggleWishlist', function (req, res, next) {
         message: result.message
     });
     return next();
+});
+
+server.get('CheckWishlist', function (req, res, next) {
+    var productId = req.querystring.pid;
+    var currentCustomer = req.currentCustomer.raw;
+
+    var isInWishlist = wishlistHelper.isProductInWishlist(productId, currentCustomer);
+
+    res.json({ isInWishlist: isInWishlist });
+    next();
 });
 
 module.exports = server.exports();

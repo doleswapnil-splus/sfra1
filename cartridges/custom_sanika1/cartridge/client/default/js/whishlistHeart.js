@@ -34,3 +34,27 @@
             }
         });
     });
+
+    $(document).on('click', '.remove-button', function (e) {
+        e.preventDefault();
+
+        var button = $(this);
+        var form = button.closest('form');
+        var formData = form.serialize();
+        var actionUrl = form.attr('action');
+
+        $.ajax({
+            url: actionUrl,
+            method: 'POST',
+            data: formData,
+            success: function (response) {
+                alert(response.message);
+            },
+            error: function () {
+                alert('Error: Unable to remove the product. Please try again.');
+            }
+        });
+    });
+
+
+

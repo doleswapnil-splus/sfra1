@@ -52,21 +52,10 @@
                              <div class="button-container">
                                 <form action="${URLUtils.url('WishlistHeart-Remove')}" method="post" class="remove-form">
                                     <input type="hidden" name="pid" value="${item.productListItem.product.masterProduct.ID}" />
-                                    <button type="button" class="remove-button">
+                                    <button type="submit" class="remove-button">
                                     ${Resource.msg('wishlist.remove.button', 'wishlist', null)}
                                     </button>
                                 </form>
-
-                                <iscomment> <div class="container product-detail product-wrapper wishlistpage" data-pid="${item.product.masterProduct.ID}">
-                                    <input type="hidden" class="add-to-cart-url" value="${pdict.addToCartUrl}">
-                                    <button class="add-to-cart btn btn-primary"
-                                            data-toggle="modal" data-target="#chooseBonusProductModal"
-                                            data-pid="${item.productListItem.product.masterProduct.ID}" data-options=""
-                                            ${!item.product.available ? "disabled" : ""}>
-                                        <i class="fa fa-shopping-bag"></i>
-                                        ${Resource.msg('button.addtocart', 'common', null)}
-                                    </button>
-                                </div> </iscomment>
                             </div>
                         </div>
                     </div>

@@ -16,7 +16,8 @@ var properties = function () {
 
 var urls = function () {
     return {
-        SubmitReviewUrl: URLUtils.url('SubmitReview-Start').toString()
+        SubmitReviewUrl: URLUtils.url('SubmitReview-Start').toString(),
+        InWishlistUrl: URLUtils.url('WishlistHeart-CheckWishlist').toString()
     }
 };
 

@@ -139,5 +139,68 @@ function addToCart() {
     });
 }
 
+function selectAttribute () {
+    $(document).on('change', 'select[class*="select-"], .options-select', function (e) {
+        e.preventDefault();
+
+        var $productContainer = $(this).closest('.set-item');
+        if (!$productContainer.length) {
+            $productContainer = $(this).closest('.product-detail');
+        }
+        attributeSelect(e.currentTarget.value, $productContainer);
+    });
+}
+
+function attributeSelect(selectedValueUrl, $productContainer) {
+    if (selectedValueUrl) {
+        $('body').trigger(
+            'product:beforeAttributeSelect',
+            { url: selectedValueUrl, container: $productContainer }
+        );
+
+        $.ajax({
+            url: selectedValueUrl,
+            method: 'GET',
+            success: function (data) {
+                base.handleVariantResponse(data, $productContainer);
+                base.updateOptions(data.product.optionsHtml, $productContainer);
+                base.updateQuantities(data.product.quantities, $productContainer);
+                checkWishlistStatus(data.product.id);
+
+                $('body').trigger(
+                    'product:afterAttributeSelect',
+                    { data: data, container: $productContainer }
+                );
+                $.spinner().stop();
+            },
+            error: function () {
+                $.spinner().stop();
+            }
+        });
+    }
+}
+
+function checkWishlistStatus(productId) {
+    $.ajax({
+        url: window.urls.InWishlistUrl,
+        method: 'GET',
+        data: { pid: productId },
+        success: function (response) {
+            if (response.isInWishlist) {
+                $('.wishlist-icon-button i').removeClass('wishlist-removed').addClass('wishlist-added');
+            } else {
+                $('.wishlist-icon-button i').removeClass('wishlist-added').addClass('wishlist-removed');
+            }
+        },
+        error: function () {
+            console.error('Error checking wishlist status.');
+        }
+    });
+}
+
 base.addToCart = addToCart;
+base.selectAttribute=selectAttribute;
+base.checkWishlistStatus=checkWishlistStatus;
+base.attributeSelect=attributeSelect;
+
 module.exports = base;
