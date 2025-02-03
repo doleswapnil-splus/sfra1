@@ -1,3 +1,14 @@
+function initWishlistButton() {
+    $('.wishlist-icon-button').each(function () {
+        var button = $(this);
+        var heartIcon = button.find('.fa-heart');
+        var isInWishlist = button.attr('data-wishlist-state') === 'true';
+        if (isInWishlist) {
+            heartIcon.addClass('wishlist-added');
+        } else {
+            heartIcon.addClass('wishlist-removed');
+        }
+    });
 
     $('.wishlist-icon-button').on('click', function (event) {
         event.preventDefault();
@@ -34,27 +45,30 @@
             }
         });
     });
+}
 
-    $(document).on('click', '.remove-button', function (e) {
-        e.preventDefault();
+$(document).on('click', '.remove-button', function (e) {
+    e.preventDefault();
 
-        var button = $(this);
-        var form = button.closest('form');
-        var formData = form.serialize();
-        var actionUrl = form.attr('action');
+    var button = $(this);
+    var form = button.closest('form');
+    var formData = form.serialize();
+    var actionUrl = form.attr('action');
 
-        $.ajax({
-            url: actionUrl,
-            method: 'POST',
-            data: formData,
-            success: function (response) {
-                alert(response.message);
-            },
-            error: function () {
-                alert('Error: Unable to remove the product. Please try again.');
-            }
-        });
+    $.ajax({
+        url: actionUrl,
+        method: 'POST',
+        data: formData,
+        success: function (response) {
+            alert(response.message);
+            window.location.reload();
+        },
+        error: function () {
+            alert('Error: Unable to remove the product. Please try again.');
+        }
     });
+});
 
-
-
+module.exports = {
+    initWishlistButton: initWishlistButton
+};

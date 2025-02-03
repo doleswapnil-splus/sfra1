@@ -40,6 +40,8 @@ server.get('ShowProducts', function (req, res, next) {
             var item = iterator.next();
             var product = ProductMgr.getProduct(item.productID);
             var selectedVariantAttributes = {};
+            var ProductFactory = require('*/cartridge/scripts/factories/product');
+            var product1 = ProductFactory.get({pid: item.productID});
 
             if (product.isVariant()) {
                 var variationModel = product.getVariationModel();
@@ -57,6 +59,7 @@ server.get('ShowProducts', function (req, res, next) {
             }
             updatedWishlistItems.push({
                 productListItem: item,
+                imageURL: product1.images.small[0].url,
                 selectedVariantAttributes: selectedVariantAttributes
             });
         }
@@ -93,7 +96,7 @@ server.get('CheckWishlist', function (req, res, next) {
     var productId = req.querystring.pid;
     var currentCustomer = req.currentCustomer.raw;
 
-    var isInWishlist = wishlistHelper.isProductInWishlist(productId, currentCustomer);
+    var isInWishlist = wishlistHelpers.isProductInWishlist(productId, currentCustomer);
 
     res.json({ isInWishlist: isInWishlist });
     next();

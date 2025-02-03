@@ -20,11 +20,11 @@ function removeProductFromWishlist(productId, currentCustomer) {
 
             items.forEach(function (item) {
                 var itemProduct = item.product;
-                if (itemProduct.isVariant() && itemProduct.masterProduct.ID === productId) {
+                if (itemProduct.ID === productId) {
                     productItem = item;
                     wishlist.removeItem(productItem);
                     success = true;
-                } else if (itemProduct.ID === productId) {
+                } else if (itemProduct.isVariant() && itemProduct.masterProduct.ID === productId) {
                     productItem = item;
                     wishlist.removeItem(productItem);
                     success = true;

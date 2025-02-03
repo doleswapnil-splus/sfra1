@@ -4,8 +4,8 @@
 </isscript>
 <div class="wishlist-icon-container" style="position:absolute; width:min-width">
     <form action="${URLUtils.url('WishlistHeart-ToggleWishlist')}" method="post" class="wishlist-form" id="wishlistForm">
-        <input type="hidden" name="pid" value="${product.id}"/>
-        <input type="hidden" name="masterpid" value="${product.master ? product.master.ID : product.ID}"/>
+    <input type="hidden" name="pid" class="product-id" value="${product.id}"/>
+    <span class="product-id" style="display:none;"></span>
         <button type="submit" class="wishlist-icon-button"
                 data-wishlist-state="false"
                 title="Add to Wishlist"
@@ -14,4 +14,3 @@
         </button>
     </form>
 </div>
-

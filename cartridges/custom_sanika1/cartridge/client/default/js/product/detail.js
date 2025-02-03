@@ -116,9 +116,53 @@ function emailValidation() {
     });
 }
 
+function updateAttribute() {
+    $('body').on('product:afterAttributeSelect', function (e, response) {
+        if (response.data && response.data.product) {
+            var productId = response.data.product.id; // Get the selected product ID
+
+            if ($('.product-detail>.bundle-items').length) {
+                response.container.data('pid', productId);
+                response.container.find('.product-id').text(productId);
+            } else if ($('.product-set-detail').eq(0).length) { // Fix condition
+                response.container.data('pid', productId);
+                response.container.find('.product-id').text(productId);
+            } else {
+                $('.product-id').text(productId);
+                $('.product-detail:not(".bundle-item")').data('pid', productId);
+            }
+            var variantIdText=productId;
+            $('input.product-id').val(variantIdText);
+            checkWishlistStatus(productId);
+        }
+    });
+}
+
+function checkWishlistStatus(productId) {
+    $.ajax({
+        url: window.urls.InWishlistUrl,
+        method: 'GET',
+        data: { pid: productId },
+        success: function (response) {
+            if (response.isInWishlist) {
+                $('.wishlist-icon-button i').removeClass('wishlist-removed').addClass('wishlist-added');
+            } else {
+                $('.wishlist-icon-button i').removeClass('wishlist-added').addClass('wishlist-removed');
+            }
+        },
+        error: function () {
+            alert('Unable to check wishlist status. Please try again later.');
+        }
+    });
+}
+
+
+
 base.updateGiftCerticate = updateGiftCerticate;
 base.closeModal = closeModal;
 base.updateAddToCart = updateAddToCart;
 base.emailValidation = emailValidation;
+base.updateAttribute=updateAttribute;
+base.checkWishlistStatus=checkWishlistStatus;
 
 module.exports = base;

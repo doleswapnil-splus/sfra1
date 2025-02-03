@@ -8,7 +8,7 @@
     <h2>${Resource.msg('wishlist.title', 'wishlist', null)}</h2>
 
     <isif condition="${pdict.wishlistItems && !pdict.wishlistItems.empty}">
-        <div class="container product-detail product-wrapper" data-pid="${product.id}">
+        <div class="container product-detail product-wrapper">
             <div class="wishlist-grid">
                 <isloop items="${pdict.wishlistItems}" var="item">
                     <div class="product-tile wishlist">
@@ -17,7 +17,7 @@
 
                         <!-- Product Image -->
                         <div class="product-image-container">
-                            <img src="${item.productListItem.product.getImageURL()}" alt="${item.product.getName()}" class="product-image" />
+                            <img src="${item.imageURL}" alt="${item.product.getName()}" class="product-image" />
                         </div>
 
                         <!-- Product Details -->
@@ -51,7 +51,7 @@
                             <!-- Remove Button -->
                              <div class="button-container">
                                 <form action="${URLUtils.url('WishlistHeart-Remove')}" method="post" class="remove-form">
-                                    <input type="hidden" name="pid" value="${item.productListItem.product.masterProduct.ID}" />
+                                    <input type="hidden" name="pid" value="${item.productListItem.productID}" />
                                     <button type="submit" class="remove-button">
                                     ${Resource.msg('wishlist.remove.button', 'wishlist', null)}
                                     </button>

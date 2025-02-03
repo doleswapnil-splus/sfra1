@@ -5,16 +5,23 @@
 <isset name="isProductSet" value="${false}" scope="page" />
 <isset name="loopState" value="${{count: 1}}" scope="page" />
 
- <iscomment> <isscript>
+<isscript>
         var assets = require('*/cartridge/scripts/assets');
-        assets.addJs('/js/whishlistHeart.js');
-</isscript> </iscomment>
+        assets.addCss('/css/wishlist.css');
+</isscript>
 
 <div class="product-quickview product-${product.productType} col product-wrapper product-detail" data-pid="${product.id}">
+    <div class="attributes">
+                <!-- Wishlist Button -->
+                 <div class="row">
+                      <div class="col">
+                          <isinclude template="wishlist/wishlistButton" />
+                      </div>
+                </div>
+            </div>
     <div class="row">
         <!-- Product Images Carousel -->
         <isinclude template="product/components/imageCarousel" />
-
         <!-- Product Name and Number -->
         <div class="col-sm-6">
             <div class="row">
