@@ -4,7 +4,7 @@
         <button type="submit" class="wishlist-icon-button"
                 data-wishlist-state="false"
                 title="Add to Wishlist"
-                style="background-color: transparent; border: 1px solid white; border-radius: 50%; padding: 10px; cursor: pointer;">
+                style="background-color: transparent; border: none; border-radius: 50%; cursor: pointer;">
             <i class="fa fa-heart" style="color: #e74c3c; font-size: 24px;"></i>
         </button>
     </form>

@@ -1,6 +1,7 @@
 'use strict';
 
 var base = require('base/product/detail');
+var wishlist = require('../whishlistHeart');
 
 /**
  * Enable/disable UI elements
@@ -120,4 +121,9 @@ base.closeModal = closeModal;
 base.updateAddToCart = updateAddToCart;
 base.emailValidation = emailValidation;
 
-module.exports = base;
+module.exports = {
+    initWishlist: function () {
+        wishlist.init();
+    } ,
+    base
+};
