@@ -1,6 +1,10 @@
+<isscript>
+        var assets = require('*/cartridge/scripts/assets');
+        assets.addCss('/css/wishlist.css');
+</isscript>
 <div class="wishlist-icon-container">
     <form action="${URLUtils.url('WishlistHeart-ToggleWishlist')}" method="post" class="wishlist-form" id="wishlistForm">
-        <input type="hidden" name="pid" value="${product.id}" />
+    <input type="hidden" name="pid" class="product-id" value="${product.id}"/>
         <button type="submit" class="wishlist-icon-button"
                 data-wishlist-state="false"
                 title="Add to Wishlist"
@@ -9,4 +13,3 @@
         </button>
     </form>
 </div>
-

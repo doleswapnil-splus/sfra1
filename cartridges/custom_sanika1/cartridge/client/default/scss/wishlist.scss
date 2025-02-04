@@ -1,10 +1,14 @@
 
 .wishlist-added {
-    color: #e74c3c;
+    color:#000;
   }
 
   .wishlist-removed {
-    color: #0000;
+    color:rgb(231, 135, 135);
+
+    &.fa-heart:before {
+        color: white;
+    }
   }
   .wishlist-grid {
     display: grid;

@@ -5,6 +5,7 @@
         assets.addJs('/js/productDetail.js');
         assets.addJs('/js/whishlistHeart.js');
         assets.addCss('/css/product/detail.css');
+        assets.addCss('/css/wishlist.css');
     </isscript>
 
     <isset name="product" value="${pdict.product}" scope="page" />

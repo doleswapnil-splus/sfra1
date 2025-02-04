@@ -8,21 +8,29 @@ var collections = require('*/cartridge/scripts/util/collections');
 var Resource = require('dw/web/Resource');
 
 function removeProductFromWishlist(productId, currentCustomer) {
-    var success=false;
+    var success = false;
+
     Transaction.wrap(function () {
         var wishlists = ProductListMgr.getProductLists(currentCustomer.raw, ProductList.TYPE_WISH_LIST);
         var wishlist = wishlists.length > 0 ? wishlists[0] : null;
+
         if (wishlist) {
             var productItem = null;
             var items = wishlist.getItems().toArray();
+
             items.forEach(function (item) {
                 var itemProduct = item.product;
-                if (itemProduct.isVariant() && itemProduct.masterProduct.ID === productId) {
+                if (itemProduct.ID === productId) {
+                    productItem = item;
+                    wishlist.removeItem(productItem);
+                    success = true;
+                } else if (itemProduct.isVariant() && itemProduct.masterProduct.ID === productId) {
                     productItem = item;
                     wishlist.removeItem(productItem);
                     success = true;
                 }
             });
+
         }
     });
     return success;
@@ -62,8 +70,10 @@ function handleWishlistToggle(productId, currentCustomer) {
                         if (variants.length > 0) {
                             variantProduct = variants.toArray()[0];
                         }
+                        var newProductItem = wishlist.createProductItem(variantProduct);
+                    } else{
+                        var newProductItem = wishlist.createProductItem(variantProduct);
                     }
-                    var newProductItem = wishlist.createProductItem(variantProduct);
                     var optionModel = variantProduct.getOptionModel();
                     if (optionModel) {
                         var options = optionModel.getOptions();
@@ -86,7 +96,30 @@ function handleWishlistToggle(productId, currentCustomer) {
     return { success: success, message: responseMessage };
 }
 
+function isProductInWishlist(productId, customer) {
+    var isInWishlist = false;
+
+    Transaction.wrap(function () {
+        var wishlists = ProductListMgr.getProductLists(customer, ProductList.TYPE_WISH_LIST);
+        var wishlist = wishlists && wishlists.length > 0 ? wishlists[0] : null;
+
+        if (wishlist) {
+            var items = wishlist.getItems().toArray();
+            items.forEach(function (item) {
+                var itemProduct = item.product;
+                if (itemProduct.isVariant() && itemProduct.masterProduct.ID === productId) {
+                    isInWishlist = true;
+                }else if (itemProduct.ID === productId){
+                    isInWishlist = true;
+                }
+            });
+        }
+    });
+    return isInWishlist;
+}
+
 module.exports = {
     removeProductFromWishlist:removeProductFromWishlist,
-    handleWishlistToggle:handleWishlistToggle
+    handleWishlistToggle:handleWishlistToggle,
+    isProductInWishlist: isProductInWishlist
 };
