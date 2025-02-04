@@ -10,64 +10,49 @@ var collections = require('*/cartridge/scripts/util/collections');
 var Resource = require('dw/web/Resource');
 var wishlistHelpers = require('*/cartridge/scripts/wishlist/wishlistHelpers');
 
-// server.post('Remove', function (req, res, next) {
-//     var productId = req.form.pid;
-//     var currentCustomer = req.currentCustomer;
-//     var result = wishlistHelpers.removeProductFromWishlist(productId,currentCustomer);
-//     if (result.success) {
-//         res.json({
-//             success: true,
-//             message: result.message
-//         });
-//     } else {
-//         res.json({
-//             success: false,
-//             message: result.message
-//         });
-//     }
-//     next();
-// });
 server.get('ShowProducts', function (req, res, next) {
     var currentCustomer = req.currentCustomer.raw;
-    if (currentCustomer) {
-        var wishlists = ProductListMgr.getProductLists(currentCustomer, ProductList.TYPE_WISH_LIST);
-        var wishlist = wishlists.length > 0 ? wishlists[0] : null;
-        var wishlistItems = wishlist ? wishlist.getProductItems() : [];
-        var updatedWishlistItems = [];
-        var iterator = wishlistItems.iterator();
+    var wishlists = ProductListMgr.getProductLists(currentCustomer, ProductList.TYPE_WISH_LIST);
+    var wishlist = wishlists.length > 0 ? wishlists[0] : null;
+    var wishlistItems = wishlist ? wishlist.getProductItems() : [];
+    var updatedWishlistItems = [];
+    var iterator = wishlistItems?wishlistItems.iterator():null;
 
-        while (iterator.hasNext()) {
-            var item = iterator.next();
-            var product = ProductMgr.getProduct(item.productID);
-            var selectedVariantAttributes = {};
-            var ProductFactory = require('*/cartridge/scripts/factories/product');
-            var product1 = ProductFactory.get({pid: item.productID});
+    if (iterator){
+    while (iterator.hasNext()) {
+        var item = iterator.next();
+        var product = ProductMgr.getProduct(item.productID);
+        var selectedVariantAttributes = {};
+        var ProductFactory = require('*/cartridge/scripts/factories/product');
+        var productImage = ProductFactory.get({pid: item.productID});
 
-            if (product.isVariant()) {
-                var variationModel = product.getVariationModel();
-                var productVariationAttributes = variationModel.getProductVariationAttributes();
+        if (product.isVariant()) {
+            var variationModel = product.getVariationModel();
+            var productVariationAttributes = variationModel.getProductVariationAttributes();
 
-                collections.forEach(productVariationAttributes, function (attribute) {
-                    var attributeValue = variationModel.getSelectedValue(attribute);
-                    if (attributeValue) {
-                        selectedVariantAttributes[attribute.getID()] = {
-                            displayName: attribute.getDisplayName(),
-                            selectedValue: attributeValue.getDisplayValue()
-                        };
-                    }
-                });
-            }
-            updatedWishlistItems.push({
-                productListItem: item,
-                imageURL: product1.images.small[0].url,
-                selectedVariantAttributes: selectedVariantAttributes
+            collections.forEach(productVariationAttributes, function (attribute) {
+                var attributeValue = variationModel.getSelectedValue(attribute);
+                if (attributeValue) {
+                    selectedVariantAttributes[attribute.getID()] = {
+                        displayName: attribute.getDisplayName(),
+                        selectedValue: attributeValue.getDisplayValue()
+                    };
+                }
             });
         }
-        res.render('wishlist/show', {
-            wishlistItems: updatedWishlistItems,
+        updatedWishlistItems.push({
+            productListItem: item,
+            imageURL: productImage.images.small[0].url,
+            selectedVariantAttributes: selectedVariantAttributes
         });
     }
-    next();
+} else {
+    updatedWishlistItems = null;
+}
+    res.render('wishlist/show', {
+        wishlistItems: updatedWishlistItems,
+    });
+next();
 });
 
 server.post('Remove', function (req, res, next) {
@@ -76,7 +61,7 @@ server.post('Remove', function (req, res, next) {
     var success = wishlistHelpers.removeProductFromWishlist(productId,currentCustomer);
     res.json({
         success: success,
-        message: success ? 'Product removed successfully' : 'Error: Unable to remove product from wishlist.'
+        message: success ? Resource.msg('wishlist.toggle.success.remove', 'wishlist', null) : Resource.msg('wishlist.toggle.error', 'wishlist', null)
     });
     next();
 });

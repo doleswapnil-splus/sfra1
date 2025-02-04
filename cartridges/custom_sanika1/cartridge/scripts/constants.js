@@ -10,7 +10,9 @@ var properties = function () {
         wishlistToggleError: Resource.msg('wishlist.toggle.error', 'wishlist', null),
         wishlistNoProduct: Resource.msg('wishlist.toggle.error.noProduct', 'wishlist', null),
         wishlistAddButton: Resource.msg('wishlist.toggle.button.add', 'wishlist', null),
-        wishlistRemoveButton: Resource.msg('wishlist.toggle.button.remove', 'wishlist', null)
+        wishlistRemoveButton: Resource.msg('wishlist.toggle.button.remove', 'wishlist', null),
+        wishlistRemoveError: Resource.msg('wishlist.remove.error', 'wishlist', null),
+        wishlistVariantError: Resource.msg('wishlist.variant.error', 'wishlist', null)
     }
 };
 

@@ -2,14 +2,12 @@
         var assets = require('*/cartridge/scripts/assets');
         assets.addCss('/css/wishlist.css');
 </isscript>
-<div class="wishlist-icon-container" style="position:absolute; width:min-width">
+<div class="wishlist-icon-container">
     <form action="${URLUtils.url('WishlistHeart-ToggleWishlist')}" method="post" class="wishlist-form" id="wishlistForm">
     <input type="hidden" name="pid" class="product-id" value="${product.id}"/>
-    <span class="product-id" style="display:none;"></span>
         <button type="submit" class="wishlist-icon-button"
                 data-wishlist-state="false"
-                title="Add to Wishlist"
-                style="background-color: transparent; border: none; padding: 10px; cursor: pointer;">
+                title="Add to Wishlist">
            <i class="fa fa-heart <isif condition="${pdict.isWishlisted}">wishlist-added <iselse/>wishlist-removed</isif>"></i>
         </button>
     </form>

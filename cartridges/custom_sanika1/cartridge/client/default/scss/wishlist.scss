@@ -89,9 +89,18 @@
 .add-to-cart-container {
     text-align: center;
 }
+
 .wishlist-icon-container {
     display: block !important;
     position: absolute;
-    top: 10px; /* Adjust as needed */
-    z-index: 9999; /* Make sure it's visible */
+    top: 10px;
+    z-index: 9999;
+    width: min-content;
+}
+
+.wishlist-icon-button {
+    background-color: transparent;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
 }

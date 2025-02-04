@@ -1,51 +1,39 @@
-function initWishlistButton() {
-    $('.wishlist-icon-button').each(function () {
-        var button = $(this);
-        var heartIcon = button.find('.fa-heart');
-        var isInWishlist = button.attr('data-wishlist-state') === 'true';
-        if (isInWishlist) {
-            heartIcon.addClass('wishlist-added');
-        } else {
-            heartIcon.addClass('wishlist-removed');
-        }
-    });
 
-    $('.wishlist-icon-button').on('click', function (event) {
-        event.preventDefault();
+$('.wishlist-icon-button').on('click', function (event) {
+    event.preventDefault();
 
-        var button = $(this);
-        var form = button.closest('form');
-        var formData = form.serialize();
+    var button = $(this);
+    var form = button.closest('form');
+    var formData = form.serialize();
 
-        $.ajax({
-            url: form.attr('action'),
-            type: 'POST',
-            data: formData,
-            dataType: 'json',
-            success: function (response) {
-                var heartIcon = button.find('.fa-heart');
-                if (response.success) {
-                    if (response.message === window.properties.wishlistRemoveSuccess){
-                        heartIcon.removeClass('wishlist-added').addClass('wishlist-removed');
-                        button.attr('data-wishlist-state', 'false');
-                        button.attr('title',window.properties.wishlistAddButton);
-                        alert(response.message);
-                    } else if (response.message === window.properties.wishlistAddSuccess) {
-                        heartIcon.removeClass('wishlist-removed').addClass('wishlist-added');
-                        button.attr('data-wishlist-state', 'true');
-                        button.attr('title',window.properties.wishlistRemoveButton);
-                        alert(response.message);
-                    }
-                } else {
-                    alert(window.properties.wishlistToggleError);
+    $.ajax({
+        url: form.attr('action'),
+        type: 'POST',
+        data: formData,
+        dataType: 'json',
+        success: function (response) {
+            var heartIcon = button.find('.fa-heart');
+            if (response.success) {
+                if (response.message === window.properties.wishlistRemoveSuccess){
+                    heartIcon.removeClass('wishlist-added').addClass('wishlist-removed');
+                    button.attr('data-wishlist-state', 'false');
+                    button.attr('title',window.properties.wishlistAddButton);
+                    alert(response.message);
+                } else if (response.message === window.properties.wishlistAddSuccess) {
+                    heartIcon.removeClass('wishlist-removed').addClass('wishlist-added');
+                    button.attr('data-wishlist-state', 'true');
+                    button.attr('title',window.properties.wishlistRemoveButton);
+                    alert(response.message);
                 }
-            },
-            error: function (xhr, status, error) {
+            } else {
                 alert(window.properties.wishlistToggleError);
             }
-        });
+        },
+        error: function (xhr, status, error) {
+            alert(window.properties.wishlistToggleError);
+        }
     });
-}
+});
 
 $(document).on('click', '.remove-button', function (e) {
     e.preventDefault();
@@ -64,11 +52,9 @@ $(document).on('click', '.remove-button', function (e) {
             window.location.reload();
         },
         error: function () {
-            alert('Error: Unable to remove the product. Please try again.');
+            alert(window.properties.wishlistToggleError);
         }
     });
 });
 
-module.exports = {
-    initWishlistButton: initWishlistButton
-};
+

@@ -151,12 +151,10 @@ function checkWishlistStatus(productId) {
             }
         },
         error: function () {
-            alert('Unable to check wishlist status. Please try again later.');
+            alert(window.properties.wishlistVariantError);
         }
     });
 }
-
-
 
 base.updateGiftCerticate = updateGiftCerticate;
 base.closeModal = closeModal;
