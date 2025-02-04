@@ -16,43 +16,39 @@ server.get('ShowProducts', function (req, res, next) {
     var wishlist = wishlists.length > 0 ? wishlists[0] : null;
     var wishlistItems = wishlist ? wishlist.getProductItems() : [];
     var updatedWishlistItems = [];
-    var iterator = wishlistItems?wishlistItems.iterator():null;
 
-    if (iterator){
-    while (iterator.hasNext()) {
-        var item = iterator.next();
-        var product = ProductMgr.getProduct(item.productID);
-        var selectedVariantAttributes = {};
-        var ProductFactory = require('*/cartridge/scripts/factories/product');
-        var productImage = ProductFactory.get({pid: item.productID});
+    if (wishlistItems.length > 0) {
+        wishlistItems.forEach(function (item) {
+            var product = ProductMgr.getProduct(item.productID);
+            var selectedVariantAttributes = {};
+            var ProductFactory = require('*/cartridge/scripts/factories/product');
+            var productImage = ProductFactory.get({ pid: item.productID });
 
-        if (product.isVariant()) {
-            var variationModel = product.getVariationModel();
-            var productVariationAttributes = variationModel.getProductVariationAttributes();
+            if (product.isVariant()) {
+                var variationModel = product.getVariationModel();
+                var productVariationAttributes = variationModel.getProductVariationAttributes();
 
-            collections.forEach(productVariationAttributes, function (attribute) {
-                var attributeValue = variationModel.getSelectedValue(attribute);
-                if (attributeValue) {
-                    selectedVariantAttributes[attribute.getID()] = {
-                        displayName: attribute.getDisplayName(),
-                        selectedValue: attributeValue.getDisplayValue()
-                    };
-                }
+                collections.forEach(productVariationAttributes, function (attribute) {
+                    var attributeValue = variationModel.getSelectedValue(attribute);
+                    if (attributeValue) {
+                        selectedVariantAttributes[attribute.getID()] = {
+                            displayName: attribute.getDisplayName(),
+                            selectedValue: attributeValue.getDisplayValue()
+                        };
+                    }
+                });
+            }
+            updatedWishlistItems.push({
+                productListItem: item,
+                imageURL: productImage.images.small[0].url,
+                selectedVariantAttributes: selectedVariantAttributes
             });
-        }
-        updatedWishlistItems.push({
-            productListItem: item,
-            imageURL: productImage.images.small[0].url,
-            selectedVariantAttributes: selectedVariantAttributes
         });
     }
-} else {
-    updatedWishlistItems = null;
-}
     res.render('wishlist/show', {
         wishlistItems: updatedWishlistItems,
     });
-next();
+    next();
 });
 
 server.post('Remove', function (req, res, next) {
