@@ -1,7 +1,7 @@
 'use strict';
 
-var base = require('base/quickView');
-wishlist = require('../whishlistHeart');
+var base = require('base/product/quickView');
+var wishlist = require('../whishlistHeart');
 
 /**
  * Generates the modal window on the first call.
@@ -93,6 +93,9 @@ function showQuickview() {
         $(e.target).trigger('quickview:show');
         getModalHtmlElement();
         fillModalElement(selectedValueUrl);
+    });
+
+    $('body').on('shown.bs.modal', '#quickViewModal', function () {
     });
 }
 
