@@ -15,10 +15,11 @@ server.get('ShowProducts', function (req, res, next) {
     var wishlists = ProductListMgr.getProductLists(currentCustomer, ProductList.TYPE_WISH_LIST);
     var wishlist = wishlists.length > 0 ? wishlists[0] : null;
     var wishlistItems = wishlist ? wishlist.getProductItems() : [];
-    var updatedWishlistItems = [];
-
-    if (wishlistItems.length > 0) {
-        wishlistItems.forEach(function (item) {
+    var updatedWishlistItems = []
+    var wishlistItr = wishlistItems.length ? wishlistItems.iterator() : null;
+    if(wishlistItr) {
+        while(wishlistItr.hasNext()) {
+            var item = wishlistItr.next();
             var product = ProductMgr.getProduct(item.productID);
             var selectedVariantAttributes = {};
             var ProductFactory = require('*/cartridge/scripts/factories/product');
@@ -38,11 +39,11 @@ server.get('ShowProducts', function (req, res, next) {
                     }
                 });
             }
-            updatedWishlistItems.push({
-                productListItem: item,
-                imageURL: productImage.images.small[0].url,
-                selectedVariantAttributes: selectedVariantAttributes
-            });
+        }
+        updatedWishlistItems.push({
+            productListItem: item,
+            imageURL: productImage.images.small[0].url,
+            selectedVariantAttributes: selectedVariantAttributes
         });
     }
     res.render('wishlist/show', {
