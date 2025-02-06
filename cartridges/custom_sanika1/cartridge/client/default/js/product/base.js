@@ -129,7 +129,7 @@ function addToCart() {
                     handlePostCartAdd(data);
                     $('body').trigger('product:afterAddToCart', data);
                     $.spinner().stop();
-                    miniCartReportingUrl(data.reportingURL);
+                    base.miniCartReportingUrl(data.reportingURL);
                 },
                 error: function () {
                     $.spinner().stop();

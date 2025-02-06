@@ -162,5 +162,5 @@ base.updateAddToCart = updateAddToCart;
 base.emailValidation = emailValidation;
 base.updateAttribute=updateAttribute;
 base.checkWishlistStatus=checkWishlistStatus;
-
+base.addToCart=custombase.addToCart;
 module.exports = base;

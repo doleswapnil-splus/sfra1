@@ -66,7 +66,7 @@ server.post('Remove', function (req, res, next) {
 server.post('ToggleWishlist', function (req, res, next) {
     var productId = req.form.pid;
     var currentCustomer = req.currentCustomer;
-    var result=wishlistHelpers.handleWishlistToggle(productId, currentCustomer);
+    var result=wishlistHelpers.handleWishlistToggle(productId,currentCustomer);
     res.json({
         success: result.success,
         message: result.message
