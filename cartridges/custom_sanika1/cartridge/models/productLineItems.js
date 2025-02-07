@@ -19,10 +19,13 @@ function ProductLineItems(productLineItems, view) {
             var lineItem = productLineItems[index];
             if (lineItem && lineItem.custom) {
                 item.isGiftCertificate = lineItem.custom.isGiftCertificate || false;
-                item.giftCertificateType = lineItem.custom.giftCertificateType || null;
+                item.giftCertificateObj = lineItem.custom;
             }
         });
+        var d;
+
     }
+
 }
 
 ProductLineItems.getTotalQuantity = base.getTotalQuantity;

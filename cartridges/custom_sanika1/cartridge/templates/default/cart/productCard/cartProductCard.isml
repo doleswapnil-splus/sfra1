@@ -28,11 +28,11 @@
                         </isloop>
                         <!-- Check if product is a Gift Certificate -->
                         <isif condition="${lineItem.isGiftCertificate}">
-                            <div class="cart-items" data-gift-certificate-type="${lineItem.giftCertificateType}">
-                                <p>${Resource.msg('giftCertificate.type', 'giftCertificate', null)}${lineItem.giftCertificateType}</p>
-                                <p>${Resource.msg('giftCertificate.FirstName', 'giftCertificate', null)}${lineItem.firstName}</p>
-                                <p>${Resource.msg('giftCertificate.LastName', 'giftCertificate', null)}${lineItem.lastName}</p>
-                                <p>${Resource.msg('giftCertificate.email', 'giftCertificate', null)} ${lineItem.email}</p>
+                            <div class="cart-items" data-gift-certificate-type="${lineItem.giftCertificateObj.giftCertificateType}">
+                                <p>${Resource.msg('giftCertificate.type', 'giftCertificate', null)}${lineItem.giftCertificateObj.giftCertificateType}</p>
+                                <p>${Resource.msg('giftCertificate.FirstName', 'giftCertificate', null)}${lineItem.giftCertificateObj.firstName}</p>
+                                <p>${Resource.msg('giftCertificate.LastName', 'giftCertificate', null)}${lineItem.giftCertificateObj.lastName}</p>
+                                <p>${Resource.msg('giftCertificate.email', 'giftCertificate', null)}${lineItem.giftCertificateObj.email}</p>
                             </div>
                         </isif>
                         <isinclude template="cart/productCard/cartProductCardAvailability" />
