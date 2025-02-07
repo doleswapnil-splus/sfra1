@@ -34,7 +34,7 @@
                 </isloop>
                 <div class="cart-items" data-gift-certificate-type="${lineItem.isGiftCertificate ? lineItem.giftCertificateType : 'none'}">
                     <isif condition="${lineItem.isGiftCertificate}">
-                        <p>${Resource.msg('card.giftcertificate.type', 'giftCertificate', null)} ${lineItem.giftCertificateType}</p>
+                         <p>${Resource.msg('giftCertificate.type', 'giftCertificate', null)}${lineItem.giftCertificateObj.giftCertificateType}</p>
                     </isif>
                 </div>
 

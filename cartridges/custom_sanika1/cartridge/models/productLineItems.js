@@ -22,10 +22,7 @@ function ProductLineItems(productLineItems, view) {
                 item.giftCertificateObj = lineItem.custom;
             }
         });
-        var d;
-
     }
-
 }
 
 ProductLineItems.getTotalQuantity = base.getTotalQuantity;
