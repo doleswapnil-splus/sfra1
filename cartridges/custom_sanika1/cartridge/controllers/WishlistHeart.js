@@ -11,14 +11,16 @@ var Resource = require('dw/web/Resource');
 var wishlistHelpers = require('*/cartridge/scripts/wishlist/wishlistHelpers');
 
 server.get('ShowProducts', function (req, res, next) {
-    var currentCustomer = req.currentCustomer.raw;
+var currentCustomer = req.currentCustomer.raw;
+if (currentCustomer) {
     var wishlists = ProductListMgr.getProductLists(currentCustomer, ProductList.TYPE_WISH_LIST);
     var wishlist = wishlists.length > 0 ? wishlists[0] : null;
     var wishlistItems = wishlist ? wishlist.getProductItems() : [];
-    var updatedWishlistItems = []
+    var updatedWishlistItems = [];
     var wishlistItr = wishlistItems.length ? wishlistItems.iterator() : null;
-    if(wishlistItr) {
-        while(wishlistItr.hasNext()) {
+
+    if (wishlistItr) {
+        while (wishlistItr.hasNext()) {
             var item = wishlistItr.next();
             var product = ProductMgr.getProduct(item.productID);
             var selectedVariantAttributes = {};
@@ -39,17 +41,18 @@ server.get('ShowProducts', function (req, res, next) {
                     }
                 });
             }
+            updatedWishlistItems.push({
+                productListItem: item,
+                imageURL: productImage.images.small[0].url,
+                selectedVariantAttributes: selectedVariantAttributes
+            });
         }
-        updatedWishlistItems.push({
-            productListItem: item,
-            imageURL: productImage.images.small[0].url,
-            selectedVariantAttributes: selectedVariantAttributes
-        });
     }
     res.render('wishlist/show', {
         wishlistItems: updatedWishlistItems,
     });
-    next();
+}
+next();
 });
 
 server.post('Remove', function (req, res, next) {
