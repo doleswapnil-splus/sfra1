@@ -1,16 +1,5 @@
 module.exports = {
     init: function () {
-        $('.wishlist-icon-button').each(function () {
-            var button = $(this);
-            var heartIcon = button.find('.fa-heart');
-            var isInWishlist = button.attr('data-wishlist-state') === 'true';
-            if (isInWishlist) {
-                heartIcon.addClass('wishlist-added');
-            } else {
-                heartIcon.addClass('wishlist-removed');
-            }
-        });
-
         $('.wishlist-icon-button').on('click', function (event) {
             event.preventDefault();
 
@@ -42,6 +31,28 @@ module.exports = {
                     }
                 },
                 error: function (xhr, status, error) {
+                    alert(window.properties.wishlistToggleError);
+                }
+            });
+        });
+
+        $(document).on('click', '.remove-button', function (e) {
+            e.preventDefault();
+
+            var button = $(this);
+            var form = button.closest('form');
+            var formData = form.serialize();
+            var actionUrl = form.attr('action');
+
+            $.ajax({
+                url: actionUrl,
+                method: 'POST',
+                data: formData,
+                success: function (response) {
+                    alert(response.message);
+                    window.location.reload();
+                },
+                error: function () {
                     alert(window.properties.wishlistToggleError);
                 }
             });

@@ -2,6 +2,7 @@
 
 var base = require('base/product/detail');
 var wishlist = require('../whishlistHeart');
+var custombase=require('./base');
 
 /**
  * Enable/disable UI elements
