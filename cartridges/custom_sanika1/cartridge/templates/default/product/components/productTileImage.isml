@@ -1,5 +1,5 @@
 <div class="image-container">
- <isinclude template="wishlist/wishlistButton" />
+    <isinclude template="wishlist/wishlistButton" />
     <a href="${pdict.urls.product}">
         <img class="tile-image"
              src="${product.images.medium[0].url}"

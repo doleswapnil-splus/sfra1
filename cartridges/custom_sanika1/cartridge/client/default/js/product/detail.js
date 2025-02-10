@@ -1,7 +1,7 @@
 'use strict';
 
 var base = require('base/product/detail');
-var custombase = require('./base');
+var wishlist = require('../whishlistHeart');
 
 /**
  * Enable/disable UI elements
@@ -163,4 +163,11 @@ base.emailValidation = emailValidation;
 base.updateAttribute=updateAttribute;
 base.checkWishlistStatus=checkWishlistStatus;
 base.addToCart=custombase.addToCart;
-module.exports = base;
+
+module.exports = {
+    initWishlist: function () {
+        wishlist.init();
+    } ,
+    base
+};
+

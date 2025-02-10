@@ -24,7 +24,5 @@
             <isinclude template="product/productTileFooter" />
         </isif>
     </div>
-
-
     <!-- END_dwmarker -->
 </div>

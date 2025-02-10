@@ -29,15 +29,6 @@
                 </div>
             </div>
 
-
-            <div class="attributes">
-                <!-- Wishlist Button -->
-                 <div class="row">
-                      <div class="col">
-                          <isinclude template="wishlist/wishlistButton" />
-                      </div>
-                </div>
-            </div>
             <div class="row">
                 <!-- Product Images Carousel -->
                 <isinclude template="product/components/imageCarousel" />

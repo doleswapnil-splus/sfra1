@@ -99,6 +99,7 @@
     "autoprefixer": "^10.4.14",
     "bootstrap": "^4.6.2",
     "cleave.js": "^1.5.3",
+    "flag-icon-css": "^4.1.7",
     "flag-icons": "7.1.0",
     "font-awesome": "^4.7.0",
     "jquery": "^3.5.1",
@@ -113,12 +114,6 @@
     "presets": [
       "env"
     ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run lint",
-      "pre-push": "npm run test"
-    }
   },
   "paths": {
     "base": "./cartridges/app_storefront_base"
