@@ -1,7 +1,6 @@
 'use strict';
 
 var base = require('base/product/detail');
-var wishlist = require('../whishlistHeart');
 var custombase=require('./base');
 
 /**
@@ -21,7 +20,7 @@ function updateGiftCerticate() {
             $addToCart.hide();
         }
 
-        localStorage.setItem('giftCertificateType', $(this).val());
+        window.localStorage.setItem('giftCertificateType', $(this).val());
     });
 
     // Initial check to set the button state on page load
@@ -33,7 +32,7 @@ function updateGiftCerticate() {
 
     // Restore saved state from localStorage
     $(document).ready(function () {
-        const savedType = localStorage.getItem('giftCertificateType');
+        const savedType = window.localStorage.getItem('giftCertificateType');
         if (savedType) {
             $(`#emailGiftCertificate[value="${savedType}"]`).prop('checked', true);
         }
@@ -165,10 +164,5 @@ base.updateAttribute=updateAttribute;
 base.checkWishlistStatus=checkWishlistStatus;
 base.addToCart=custombase.addToCart;
 
-module.exports = {
-    initWishlist: function () {
-        wishlist.init();
-    } ,
-    base
-};
+module.exports = base;
 
