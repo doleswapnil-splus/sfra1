@@ -3,10 +3,8 @@
 var server = require('server');
 server.extend(module.superModule);
 
-var URLUtils = require('dw/web/URLUtils');
-var wishlistHelper = require('*/cartridge/scripts/wishlist/wishlistHelpers');
-
 server.append('Show', function (req, res, next) {
+    var wishlistHelper = require('*/cartridge/scripts/wishlist/wishlistHelpers');
     var viewData = res.getViewData();
 
     if (viewData.product) {

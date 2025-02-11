@@ -1,7 +1,7 @@
 <isdecorate template="common/layout/page">
     <isscript>
         var assets = require('*/cartridge/scripts/assets');
-        assets.addJs('/js/whishlistHeart.js');
+        assets.addJs('/js/productTile.js');
         assets.addCss('/css/wishlist.css');
     </isscript>
 
@@ -12,9 +12,6 @@
             <div class="wishlist-grid">
                 <isloop items="${pdict.wishlistItems}" var="item">
                     <div class="product-tile wishlist">
-                        <iscomment> <p>${Resource.msg('wishlist.productID', 'wishlist', null)}${item.productListItem.productID}</p>
-                        <p>${Resource.msg('wishlist.masterID', 'wishlist', null)}${item.productListItem.product.masterProduct.ID}</p> </iscomment>
-
                         <!-- Product Image -->
                         <div class="product-image-container">
                             <img src="${item.imageURL}" alt="${item.product.getName()}" class="product-image" />

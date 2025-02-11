@@ -1,6 +1,7 @@
 <isscript>
         var assets = require('*/cartridge/scripts/assets');
         assets.addCss('/css/wishlist.css');
+        assets.addJs('/js/productTile.js');
 </isscript>
 
  <div class="product-tile">

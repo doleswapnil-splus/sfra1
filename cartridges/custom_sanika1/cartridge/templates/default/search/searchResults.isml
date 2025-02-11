@@ -5,6 +5,5 @@
         assets.addCss('/css/search.css');
         assets.addCss('/css/wishlist.css');
     </isscript>
-
     <isinclude template="search/searchResultsNoDecorator" />
 </isdecorate>
