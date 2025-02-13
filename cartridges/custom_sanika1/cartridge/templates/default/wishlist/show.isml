@@ -13,9 +13,11 @@
                 <isloop items="${pdict.wishlistItems}" var="item">
                     <div class="product-tile wishlist">
                         <!-- Product Image -->
-                        <div class="product-image-container">
-                            <img src="${item.imageURL}" alt="${item.product.getName()}" class="product-image" />
-                        </div>
+                        <a href="${URLUtils.url('Product-Show', 'pid', item.productListItem.product.ID)}">
+                            <div class="product-image-container">
+                                <img src="${item.imageURL}" alt="${item.product.getName()}" class="product-image" />
+                            </div>
+                        </a>
 
                         <!-- Product Details -->
                         <div class="product-details">
@@ -26,7 +28,7 @@
                             <p class="product-description">${item.productListItem.product.getShortDescription()}</p>
 
                             <!-- Product Price -->
-                            <p class="product-price">${Resource.msg('wishlist.price', 'wishlist', null)} ${item.productListItem.product.getPriceModel().getPrice()}</p>
+                            <p class="product-price">${Resource.msg('wishlist.price', 'wishlist', null)} <isprint value="${item.productListItem.product.getPriceModel().getMinPrice()}" encoding="off"/></p>
 
                             <!-- Variant Attributes -->
                             <div class="variant-attributes">
@@ -63,3 +65,4 @@
         <p>${Resource.msg('wishlist.empty', 'wishlist', null)}</p>
     </isif>
 </isdecorate>
+ 

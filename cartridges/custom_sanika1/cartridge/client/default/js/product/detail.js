@@ -119,12 +119,12 @@ function emailValidation() {
 function updateAttribute() {
     $('body').on('product:afterAttributeSelect', function (e, response) {
         if (response.data && response.data.product) {
-            var productId = response.data.product.id; // Get the selected product ID
+            var productId = response.data.product.id;
 
             if ($('.product-detail>.bundle-items').length) {
                 response.container.data('pid', productId);
                 response.container.find('.product-id').text(productId);
-            } else if ($('.product-set-detail').eq(0).length) { // Fix condition
+            } else if ($('.product-set-detail').eq(0).length) { 
                 response.container.data('pid', productId);
                 response.container.find('.product-id').text(productId);
             } else {
@@ -133,25 +133,12 @@ function updateAttribute() {
             }
             var variantIdText=productId;
             $('input.product-id').val(variantIdText);
-            checkWishlistStatus(productId);
-        }
-    });
-}
 
-function checkWishlistStatus(productId) {
-    $.ajax({
-        url: window.urls.InWishlistUrl,
-        method: 'GET',
-        data: { pid: productId },
-        success: function (response) {
-            if (response.isInWishlist) {
-                $('.wishlist-icon-button i').removeClass('wishlist-removed').addClass('wishlist-added');
-            } else {
-                $('.wishlist-icon-button i').removeClass('wishlist-added').addClass('wishlist-removed');
-            }
-        },
-        error: function () {
-            alert(window.properties.wishlistVariantError);
+           if (response.data.isWishlisted) {
+            $('.wishlist-icon-button i').removeClass('wishlist-removed').addClass('wishlist-added');
+           } else {
+            $('.wishlist-icon-button i').removeClass('wishlist-added').addClass('wishlist-removed');
+           }
         }
     });
 }
@@ -161,7 +148,6 @@ base.closeModal = closeModal;
 base.updateAddToCart = updateAddToCart;
 base.emailValidation = emailValidation;
 base.updateAttribute=updateAttribute;
-base.checkWishlistStatus=checkWishlistStatus;
 base.addToCart=custombase.addToCart;
 
 module.exports = base;
