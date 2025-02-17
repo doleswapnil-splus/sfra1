@@ -1,3 +1,9 @@
+<isscript>
+        var assets = require('*/cartridge/scripts/assets');
+        assets.addCss('/css/wishlist.css');
+        assets.addJs('/js/productTile.js');
+</isscript>
+
  <div class="product-tile">
     <!-- dwMarker="product" dwContentID="${product.uuid}" -->
     <isinclude template="product/components/productTileImage" />
@@ -19,7 +25,5 @@
             <isinclude template="product/productTileFooter" />
         </isif>
     </div>
-
- <isinclude template="wishlist/wishlistButton" />
     <!-- END_dwmarker -->
 </div>

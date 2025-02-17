@@ -1,6 +1,7 @@
 'use strict';
 
 var base = require('base/product/detail');
+var custombase=require('./base');
 
 /**
  * Enable/disable UI elements
@@ -19,7 +20,7 @@ function updateGiftCerticate() {
             $addToCart.hide();
         }
 
-        localStorage.setItem('giftCertificateType', $(this).val());
+        window.localStorage.setItem('giftCertificateType', $(this).val());
     });
 
     // Initial check to set the button state on page load
@@ -31,7 +32,7 @@ function updateGiftCerticate() {
 
     // Restore saved state from localStorage
     $(document).ready(function () {
-        const savedType = localStorage.getItem('giftCertificateType');
+        const savedType = window.localStorage.getItem('giftCertificateType');
         if (savedType) {
             $(`#emailGiftCertificate[value="${savedType}"]`).prop('checked', true);
         }
@@ -54,7 +55,7 @@ function updateAddToCart() {
             return $(item).data('available') && $(item).data('ready-to-order');
         });
 
-        module.exports.base.methods.updateAddToCartEnableDisableOtherElements(!enable);
+        base.methods.updateAddToCartEnableDisableOtherElements(!enable);
         $('#personalizeButton').attr('disabled', !enable);
     });
 }
@@ -115,9 +116,39 @@ function emailValidation() {
     });
 }
 
+function updateAttribute() {
+    $('body').on('product:afterAttributeSelect', function (e, response) {
+        if (response.data && response.data.product) {
+            var productId = response.data.product.id;
+
+            if ($('.product-detail>.bundle-items').length) {
+                response.container.data('pid', productId);
+                response.container.find('.product-id').text(productId);
+            } else if ($('.product-set-detail').eq(0).length) { 
+                response.container.data('pid', productId);
+                response.container.find('.product-id').text(productId);
+            } else {
+                $('.product-id').text(productId);
+                $('.product-detail:not(".bundle-item")').data('pid', productId);
+            }
+            var variantIdText=productId;
+            $('input.product-id').val(variantIdText);
+
+           if (response.data.isWishlisted) {
+            $('.wishlist-icon-button i').removeClass('wishlist-removed').addClass('wishlist-added');
+           } else {
+            $('.wishlist-icon-button i').removeClass('wishlist-added').addClass('wishlist-removed');
+           }
+        }
+    });
+}
+
 base.updateGiftCerticate = updateGiftCerticate;
 base.closeModal = closeModal;
 base.updateAddToCart = updateAddToCart;
 base.emailValidation = emailValidation;
+base.updateAttribute=updateAttribute;
+base.addToCart=custombase.addToCart;
 
 module.exports = base;
+

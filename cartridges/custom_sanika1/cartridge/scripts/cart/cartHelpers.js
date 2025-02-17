@@ -13,7 +13,6 @@ var Transaction = require('dw/system/Transaction');
  * @returns {boolean} - True if all products have giftCertificateType='email', otherwise false
  */
 function checkGiftCertificateType(basket) {
-    
     var productLineItems = basket.productLineItems.iterator();
     var hasEmailGiftCertificate = false;
     var hasNonEmailGiftCertificate = false;
@@ -129,4 +128,5 @@ function addProductToCart(currentBasket, productId, quantity, childProducts, opt
 
 base.checkGiftCertificateType = checkGiftCertificateType;
 base.addProductToCart=addProductToCart;
+
 module.exports=base;

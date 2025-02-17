@@ -1,24 +1,23 @@
 <isdecorate template="common/layout/page">
     <isscript>
         var assets = require('*/cartridge/scripts/assets');
-        assets.addJs('/js/productDetail.js');
+        assets.addJs('/js/productTile.js');
         assets.addCss('/css/wishlist.css');
     </isscript>
 
     <h2>${Resource.msg('wishlist.title', 'wishlist', null)}</h2>
 
     <isif condition="${pdict.wishlistItems && !pdict.wishlistItems.empty}">
-        <div class="container product-detail product-wrapper" data-pid="${product.id}">
+        <div class="container product-detail product-wrapper">
             <div class="wishlist-grid">
                 <isloop items="${pdict.wishlistItems}" var="item">
                     <div class="product-tile wishlist">
-                        <p>${Resource.msg('wishlist.productID', 'wishlist', null)}${item.productListItem.productID}</p>
-                        <p>${Resource.msg('wishlist.masterID', 'wishlist', null)}${item.productListItem.product.masterProduct.ID}</p>
-
                         <!-- Product Image -->
-                        <div class="product-image-container">
-                            <img src="${item.productListItem.product.getImageURL()}" alt="${item.product.getName()}" class="product-image" />
-                        </div>
+                        <a href="${URLUtils.url('Product-Show', 'pid', item.productListItem.product.ID)}">
+                            <div class="product-image-container">
+                                <img src="${item.imageURL}" alt="${item.product.getName()}" class="product-image" />
+                            </div>
+                        </a>
 
                         <!-- Product Details -->
                         <div class="product-details">
@@ -29,7 +28,7 @@
                             <p class="product-description">${item.productListItem.product.getShortDescription()}</p>
 
                             <!-- Product Price -->
-                            <p class="product-price">${Resource.msg('wishlist.price', 'wishlist', null)} ${item.productListItem.product.getPriceModel().getPrice()}</p>
+                            <p class="product-price">${Resource.msg('wishlist.price', 'wishlist', null)} <isprint value="${item.productListItem.product.getPriceModel().getMinPrice()}" encoding="off"/></p>
 
                             <!-- Variant Attributes -->
                             <div class="variant-attributes">
@@ -49,22 +48,13 @@
                             </div>
 
                             <!-- Remove Button -->
-                            <div class="button-container">
+                             <div class="button-container">
                                 <form action="${URLUtils.url('WishlistHeart-Remove')}" method="post" class="remove-form">
-                                    <input type="hidden" name="pid" value="${item.productListItem.product.masterProduct.ID}" />
-                                    <button type="submit" class="remove-button">${Resource.msg('wishlist.remove.button', 'wishlist', null)}</button>
-                                </form>
-
-                                <div class="container product-detail product-wrapper wishlistpage" data-pid="${item.product.masterProduct.ID}">
-                                    <input type="hidden" class="add-to-cart-url" value="${pdict.addToCartUrl}">
-                                    <button class="add-to-cart btn btn-primary"
-                                            data-toggle="modal" data-target="#chooseBonusProductModal"
-                                            data-pid="${item.productListItem.product.masterProduct.ID}" data-options=""
-                                            ${!item.product.available ? "disabled" : ""}>
-                                        <i class="fa fa-shopping-bag"></i>
-                                        ${Resource.msg('button.addtocart', 'common', null)}
+                                    <input type="hidden" name="pid" value="${item.productListItem.productID}" />
+                                    <button type="submit" class="remove-button">
+                                    ${Resource.msg('wishlist.remove.button', 'wishlist', null)}
                                     </button>
-                                </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -75,3 +65,4 @@
         <p>${Resource.msg('wishlist.empty', 'wishlist', null)}</p>
     </isif>
 </isdecorate>
+ 
