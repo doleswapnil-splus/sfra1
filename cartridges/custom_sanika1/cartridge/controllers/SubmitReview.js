@@ -23,7 +23,7 @@ server.post('Start', function(req, res, next) {
             hasReviewed = reviews.some(review => review.email === email);
         }
         if (hasReviewed) {
-            res.json({ success: false, message:Resource.msg('review.already.submitted.message', 'custom', null) });
+            res.json({ success: false, message:Resource.msg('review.already.submitted.message', 'ratingsAndReview', null) });
         } else {
             if (!ratingsObject) {
                 ratingsObject = CustomObjectMgr.createCustomObject(customObject, ProductId);
@@ -39,7 +39,7 @@ server.post('Start', function(req, res, next) {
                 email:email
             });
             ratingsObject.custom.Review = JSON.stringify(reviews);
-            res.json({ success: true, message: Resource.msg('review.success.message', 'custom', null) });
+            res.json({ success: true, message: Resource.msg('review.success.message', 'ratingsAndReview', null) });
         };
     });
     return next();

@@ -116,10 +116,39 @@ function emailValidation() {
     });
 }
 
+function updateAttribute() {
+    $('body').on('product:afterAttributeSelect', function (e, response) {
+        if (response.data && response.data.product) {
+            var productId = response.data.product.id;
+
+            if ($('.product-detail>.bundle-items').length) {
+                response.container.data('pid', productId);
+                response.container.find('.product-id').text(productId);
+            } else if ($('.product-set-detail').eq(0).length) {
+                response.container.data('pid', productId);
+                response.container.find('.product-id').text(productId);
+            } else {
+                $('.product-id').text(productId);
+                $('.product-detail:not(".bundle-item")').data('pid', productId);
+            }
+            var variantIdText=productId;
+            $('input.product-id').val(variantIdText);
+
+           if (response.data.isWishlisted) {
+            $('.wishlist-icon-button i').removeClass('wishlist-removed').addClass('wishlist-added');
+           } else {
+            $('.wishlist-icon-button i').removeClass('wishlist-added').addClass('wishlist-removed');
+           }
+        }
+    });
+}
+
 base.updateGiftCerticate = updateGiftCerticate;
 base.closeModal = closeModal;
 base.updateAddToCart = updateAddToCart;
 base.emailValidation = emailValidation;
+base.updateAttribute=updateAttribute;
 base.addToCart=custombase.addToCart;
 
 module.exports = base;
+

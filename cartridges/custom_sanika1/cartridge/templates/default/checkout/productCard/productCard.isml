@@ -140,17 +140,17 @@
                 </isloop>
                 <div class="cart-items" data-gift-certificate-type="${lineItem.isGiftCertificate ? lineItem.giftCertificateType : 'none'}">
                     <isif condition="${lineItem.isGiftCertificate}">
-                        <p>${Resource.msg('card.giftcertificate.type', 'giftCertificate', null)} ${lineItem.giftCertificateType}</p>
+                         <p>${Resource.msg('giftCertificate.type', 'giftCertificate', null)}${lineItem.giftCertificateObj.giftCertificateType}</p>
                     </isif>
                 </div>
 
-                <isif condition="${pdict.pageID == 'Order-Details'}">
+                <isif condition="${pdict.action == 'Order-Details'}">
                     <div>
                         <a href="#" class="ratings" data-toggle="modal" data-target="#ratingsModal"
                            data-email="${pdict.order.orderEmail}"
                            data-orderno="${pdict.order.orderNumber}"
                            data-pid="${lineItem.id}">
-                            ${Resource.msg('card.modal.rating.title', 'custom', null)}
+                            ${Resource.msg('card.modal.rating.title', 'ratingsAndReview', null)}
                         </a>
                         <isinclude template="account/order/RatingsAndReviewsModel" />
                     </div>

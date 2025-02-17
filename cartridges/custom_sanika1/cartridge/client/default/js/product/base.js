@@ -159,12 +159,8 @@ function addToCart() {
             });
             pidsObj = JSON.stringify(setPids);
         }
-
-        if ($('.wishlistpage').length) {
-            pid = $(this).closest('.product-detail').data('pid');
-        } else {
-            pid = base.getPidValue($(this));
-        }
+        
+        pid = base.getPidValue($(this));
 
         var $productContainer = $(this).closest('.product-detail');
         if (!$productContainer.length) {
