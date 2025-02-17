@@ -30,9 +30,9 @@
                         <isif condition="${lineItem.isGiftCertificate}">
                             <div class="cart-items" data-gift-certificate-type="${lineItem.giftCertificateType}">
                                 <p>${Resource.msg('giftCertificate.type', 'giftCertificate', null)}${lineItem.giftCertificateType}</p>
-                                <p>${Resource.msg('giftCertificate.FirstName', 'giftCertificate', null)}${lineItem.firstName}</p>
+                                <iscomment> <p>${Resource.msg('giftCertificate.FirstName', 'giftCertificate', null)}${lineItem.firstName}</p>
                                 <p>${Resource.msg('giftCertificate.LastName', 'giftCertificate', null)}${lineItem.lastName}</p>
-                                <p>${Resource.msg('giftCertificate.email', 'giftCertificate', null)} ${lineItem.email}</p>
+                                <p>${Resource.msg('giftCertificate.email', 'giftCertificate', null)} ${lineItem.email}</p> </iscomment>
                             </div>
                         </isif>
                         <isinclude template="cart/productCard/cartProductCardAvailability" />

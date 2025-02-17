@@ -1,6 +1,7 @@
 'use strict';
 
 var base = require('base/product/detail');
+var custombase=require('./base');
 
 /**
  * Enable/disable UI elements
@@ -19,7 +20,7 @@ function updateGiftCerticate() {
             $addToCart.hide();
         }
 
-        localStorage.setItem('giftCertificateType', $(this).val());
+        window.localStorage.setItem('giftCertificateType', $(this).val());
     });
 
     // Initial check to set the button state on page load
@@ -31,7 +32,7 @@ function updateGiftCerticate() {
 
     // Restore saved state from localStorage
     $(document).ready(function () {
-        const savedType = localStorage.getItem('giftCertificateType');
+        const savedType = window.localStorage.getItem('giftCertificateType');
         if (savedType) {
             $(`#emailGiftCertificate[value="${savedType}"]`).prop('checked', true);
         }
@@ -54,7 +55,7 @@ function updateAddToCart() {
             return $(item).data('available') && $(item).data('ready-to-order');
         });
 
-        module.exports.base.methods.updateAddToCartEnableDisableOtherElements(!enable);
+        base.methods.updateAddToCartEnableDisableOtherElements(!enable);
         $('#personalizeButton').attr('disabled', !enable);
     });
 }
@@ -119,5 +120,6 @@ base.updateGiftCerticate = updateGiftCerticate;
 base.closeModal = closeModal;
 base.updateAddToCart = updateAddToCart;
 base.emailValidation = emailValidation;
+base.addToCart=custombase.addToCart;
 
 module.exports = base;

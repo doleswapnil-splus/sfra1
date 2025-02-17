@@ -11,7 +11,7 @@ server.extend(baseCheckout);
 
 var Transaction = require('dw/system/Transaction');
 var collections = require('*/cartridge/scripts/util/collections');
-var CartHelper = require('*/cartridge/scripts/helpers/cartHelper');
+var CartHelper = require('*/cartridge/scripts/cart/cartHelpers');
 var basketCalculationHelpers = require('*/cartridge/scripts/helpers/basketCalculationHelpers');
 
 server.append('Begin', function (req, res, next) {

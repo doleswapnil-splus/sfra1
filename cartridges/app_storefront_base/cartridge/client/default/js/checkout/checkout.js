@@ -424,8 +424,7 @@ var history = window.history;
                     e.preventDefault();
                     members.nextStage();
                 });
-
-                //
+                
                 // Handle Payment option selection
                 //
                 $('input[name$="paymentMethod"]', plugin).on('change', function () {

@@ -1,0 +1,66 @@
+<isscript>
+    var assets = require('*/cartridge/scripts/assets');
+    assets.addJs('/js/showmore.js');
+</isscript>
+
+<isif condition="${pdict.ratingsAndReviews}">
+    <div class="ratings-reviews">
+
+        <h2>
+            ${Resource.msg('ratings.reviews.title', 'ratingsAndReview', null)}
+            ${pdict.ratingsAndReviews.custom.ProductId}
+        </h2>
+
+        <isif condition="${pdict.reviews && pdict.reviews.length > 0}">
+            <h3>
+                ${Resource.msg('ratings.reviews.heading', 'ratingsAndReview', 'Customer Reviews')}
+            </h3>
+            <ul class="reviews-list">
+                <isset name="totalReviews" value="${pdict.reviews.length}" scope="page" />
+                <isset name="displayCount" value="5" scope="page" />
+                <isloop items="${pdict.reviews.slice(0, displayCount)}" var="review">
+                    <li class="review-item">
+                        <h4>
+                            ${Resource.msg('ratings.reviews.orderId', 'ratingsAndReview', 'Order ID:')} ${review.orderId}
+                        </h4>
+                        <p>
+                            <strong>${Resource.msg('ratings.reviews.review', 'ratingsAndReview', 'Review:')}</strong> ${review.review}
+                        </p>
+                        <p>
+                            <strong>${Resource.msg('ratings.reviews.rating', 'ratingsAndReview', 'Rating:')}</strong> ${review.rating}
+                        </p>
+                    </li>
+                </isloop>
+                <isif condition="${totalReviews > displayCount}">
+                    <button class="show-more" id="showMoreBtn">
+                        ${Resource.msg('ratings.reviews.showMore', 'ratingsAndReview', 'Show More')}
+                    </button>
+
+                    <ul class="hidden-reviews" style="display: none;">
+                        <isloop items="${pdict.reviews.slice(displayCount)}" var="additionalReview">
+                            <li class="review-item">
+                                <h4>
+                                    ${Resource.msg('ratings.reviews.orderId', 'ratingsAndReview', 'Order ID:')} ${additionalReview.orderId}
+                                </h4>
+                                <p>
+                                    <strong>${Resource.msg('ratings.reviews.review', 'ratingsAndReview', 'Review:')}</strong> ${additionalReview.review}
+                                </p>
+                                <p>
+                                    <strong>${Resource.msg('ratings.reviews.rating', 'ratingsAndReview', 'Rating:')}</strong> ${additionalReview.rating}
+                                </p>
+                            </li>
+                        </isloop>
+                    </ul>
+                </isif>
+            </ul>
+        <iselse/>
+            <p>
+                ${Resource.msg('ratings.reviews.noReviews', 'ratingsAndReview', 'No customer reviews available for this product.')}
+            </p>
+        </isif>
+    </div>
+<iselse/>
+    <p>
+        ${Resource.msg('ratings.reviews.noRatings', 'ratingsAndReview', 'No ratings and reviews found for this product.')}
+    </p>
+</isif>
