@@ -68,7 +68,7 @@
                 </div>
 
                 <!-- Step 2: Shipping -->
-                <isif condition="${!pdict.onlyEmailGiftCertificates}">
+             <isif condition="${pdict.isAuthenticated || !pdict.onlyEmailGiftCertificates}">
                 <isinclude template="checkout/shipping/shipping" />
                 <div class="card shipping-summary">
                     <div class="card-header clearfix">

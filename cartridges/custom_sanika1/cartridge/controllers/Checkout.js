@@ -6,7 +6,6 @@
 
 var server = require('server');
 var baseCheckout = module.superModule;
-
 server.extend(baseCheckout);
 
 var Transaction = require('dw/system/Transaction');
@@ -22,6 +21,7 @@ server.append('Begin', function (req, res, next) {
     var onlyEmailGiftCertificates = CartHelper.checkGiftCertificateType(currentBasket);
     var ShippingMgr = require('dw/order/ShippingMgr');
     var Money = require('dw/value/Money');
+    var isAuthenticated = req.currentCustomer.raw.authenticated;
 
     if (onlyEmailGiftCertificates) {
         Transaction.wrap(function () {
@@ -39,7 +39,6 @@ server.append('Begin', function (req, res, next) {
                         break;
                     }
                 }
-
                 if (freeShippingMethod) {
                     shipment.setShippingMethod(freeShippingMethod);
                 }
@@ -47,7 +46,7 @@ server.append('Begin', function (req, res, next) {
             var shipment = currentBasket.shipments[0];
 
             shipment.getShippingLineItems().toArray().forEach(function (shippingLineItem) {
-                shippingLineItem.setTax(new dw.value.Money(0, currentBasket.currencyCode));
+            shippingLineItem.setTax(new dw.value.Money(0, currentBasket.currencyCode));
             });
             currentBasket.updateTotals();
 
@@ -82,7 +81,8 @@ server.append('Begin', function (req, res, next) {
     }
     res.setViewData({
         currentStage: currentStage,
-        onlyEmailGiftCertificates: onlyEmailGiftCertificates
+        onlyEmailGiftCertificates: onlyEmailGiftCertificates,
+        isAuthenticated: isAuthenticated
     });
 
     next();
