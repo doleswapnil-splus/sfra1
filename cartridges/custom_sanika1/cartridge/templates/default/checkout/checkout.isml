@@ -81,7 +81,7 @@
                         <isinclude template="checkout/shipping/shippingSummary" />
                     </div>
                 </div>
-                </isif>
+            </isif>
 
                 <!-- Step 3: Payment and Billing -->
                 <isinclude template="checkout/billing/billing" />

@@ -8,51 +8,22 @@ var server = require('server');
 var baseCheckout = module.superModule;
 server.extend(baseCheckout);
 
-var Transaction = require('dw/system/Transaction');
-var Resource = require('dw/web/Resource');
-var collections = require('*/cartridge/scripts/util/collections');
-var CartHelper = require('*/cartridge/scripts/cart/cartHelpers');
-var basketCalculationHelpers = require('*/cartridge/scripts/helpers/basketCalculationHelpers');
-
 server.append('Begin', function (req, res, next) {
+
+    var Transaction = require('dw/system/Transaction');
+    var Resource = require('dw/web/Resource');
+    var collections = require('*/cartridge/scripts/util/collections');
+    var CartHelper = require('*/cartridge/scripts/cart/cartHelpers');
+    var basketCalculationHelpers = require('*/cartridge/scripts/helpers/basketCalculationHelpers');
     var BasketMgr = require('dw/order/BasketMgr');
     var URLUtils = require('dw/web/URLUtils');
+    var checkoutHelpers = require('*/cartridge/scripts/checkout/checkoutHelpers');
     var currentBasket = BasketMgr.getCurrentBasket();
-    var onlyEmailGiftCertificates = CartHelper.checkGiftCertificateType(currentBasket);
     var ShippingMgr = require('dw/order/ShippingMgr');
     var Money = require('dw/value/Money');
+    var onlyEmailGiftCertificates = CartHelper.checkGiftCertificateType(currentBasket);
     var isAuthenticated = req.currentCustomer.raw.authenticated;
-
-    if (onlyEmailGiftCertificates) {
-        Transaction.wrap(function () {
-            collections.forEach(currentBasket.shipments, function (shipment) {
-                var shipmentShippingModel = ShippingMgr.getShipmentShippingModel(shipment);
-                var applicableMethods = shipmentShippingModel.getApplicableShippingMethods();
-                var freeShippingMethod = null;
-                var freeShippingID = Resource.msg('shipping.method.free', 'checkout', 'free-shipping');
-
-                var methodIterator = applicableMethods.iterator();
-                while (methodIterator.hasNext()) {
-                    var method = methodIterator.next();
-                    if (method.ID === freeShippingID) {
-                        freeShippingMethod = method;
-                        break;
-                    }
-                }
-                if (freeShippingMethod) {
-                    shipment.setShippingMethod(freeShippingMethod);
-                }
-            });
-            var shipment = currentBasket.shipments[0];
-
-            shipment.getShippingLineItems().toArray().forEach(function (shippingLineItem) {
-            shippingLineItem.setTax(new dw.value.Money(0, currentBasket.currencyCode));
-            });
-            currentBasket.updateTotals();
-
-            basketCalculationHelpers.calculateTotals(currentBasket);
-        });
-    }
+    var checkoutData = checkoutHelpers.processCheckoutStages();
 
     if (!currentBasket) {
         res.redirect(URLUtils.url('Cart-Show'));
@@ -69,7 +40,6 @@ server.append('Begin', function (req, res, next) {
         if (accountModel.registeredUser) {
             // Since the shopper already logged in upon starting checkout, fast forward to shipping stage
             currentStage = 'shipping';
-
             if (!requestStage) {
                 Transaction.wrap(function () {
                     currentBasket.customerEmail = accountModel.profile.email;
@@ -84,7 +54,6 @@ server.append('Begin', function (req, res, next) {
         onlyEmailGiftCertificates: onlyEmailGiftCertificates,
         isAuthenticated: isAuthenticated
     });
-
     next();
 });
 

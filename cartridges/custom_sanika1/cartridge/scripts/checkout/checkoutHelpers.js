@@ -2,9 +2,6 @@
 
 var base = module.superModule;
 var collections = require('*/cartridge/scripts/util/collections');
-var BasketMgr = require('dw/order/BasketMgr');
-var currentBasket = BasketMgr.getCurrentBasket();
-var ShippingMgr = require('dw/order/ShippingMgr');
 
 /**
  * Loop through all shipments and make sure all non-GC shipments have a valid address.
@@ -18,28 +15,59 @@ function ensureValidShipments(lineItemContainer) {
         if (!shipment) {
             return false;
         }
-
         var address = shipment.shippingAddress;
-
-        // Convert productLineItems to an array
         var productLineItems = Array.from(shipment.productLineItems);
 
-        // Check if shipment contains any physical products
         var hasPhysicalProducts = productLineItems.some(function (pli) {
             return !(pli.custom.isGiftCertificate && pli.custom.giftCertificateType === 'email');
         });
 
-        // If the shipment has physical products, ensure it has a valid address
         if (hasPhysicalProducts) {
             return address && address.address1;
         }
-
-        // If the shipment only contains email gift cards, it is valid without an address
         return true;
     });
 
     return allValid;
 }
 
+function processCheckoutStages() {
+    var Transaction = require('dw/system/Transaction');
+    var Resource = require('dw/web/Resource');
+    var CartHelper = require('*/cartridge/scripts/cart/cartHelpers');
+    var basketCalculationHelpers = require('*/cartridge/scripts/helpers/basketCalculationHelpers');
+    var onlyEmailGiftCertificates = CartHelper.checkGiftCertificateType(currentBasket);
+    var BasketMgr = require('dw/order/BasketMgr');
+    var currentBasket = BasketMgr.getCurrentBasket();
+    var ShippingMgr = require('dw/order/ShippingMgr');
+
+    if (onlyEmailGiftCertificates) {
+        Transaction.wrap(function () {
+            collections.forEach(currentBasket.shipments, function (shipment) {
+                var shipmentShippingModel = ShippingMgr.getShipmentShippingModel(shipment);
+                var applicableMethods = shipmentShippingModel.getApplicableShippingMethods();
+                var freeShippingMethod = null;
+                var freeShippingID = Resource.msg('shipping.method.free', 'checkout', 'free-shipping');
+
+                var methodIterator = applicableMethods.iterator();
+                while (methodIterator.hasNext()) {
+                    var method = methodIterator.next();
+                    if (method.ID === freeShippingID) {
+                        freeShippingMethod = method;
+                        break;
+                    }
+                }
+                if (freeShippingMethod) {
+                    shipment.setShippingMethod(freeShippingMethod);
+                }
+            });
+            basketCalculationHelpers.calculateTotals(currentBasket);
+        });
+    }
+
+}
+
 base.ensureValidShipments = ensureValidShipments;
+base.processCheckoutStages=processCheckoutStages;
+
 module.exports = base;

@@ -417,6 +417,7 @@ var history = window.history;
                 );
 
                 $('body').on('click', '.submit-customer-login', function (e) {
+                    e.preventDefault();
                     var giftCertificateItems = $('.cart-items').filter(function () {
                         return $(this).data('gift-certificate-type') === 'email';
                     });
@@ -429,14 +430,15 @@ var history = window.history;
                     if (giftCertificateItems.length > 0 && nonGiftCertificateItems.length === 0) {
                         // Only email gift certificates in the cart
                         members.gotoStage('payment');
+                        window.location.reload();
                     } else {
                         // Mixed or non-email gift certificate items in the cart
-                        e.preventDefault();
                         members.nextStage();
                     }
                 });
 
                 $('body').on('click', '.submit-customer', function (e) {
+                    e.preventDefault();
                     var giftCertificateItems = $('.cart-items').filter(function () {
                         return $(this).data('gift-certificate-type') === 'email';
                     });
@@ -449,12 +451,13 @@ var history = window.history;
                     if (giftCertificateItems.length > 0 && nonGiftCertificateItems.length === 0) {
                         // Only email gift certificates in the cart
                         members.gotoStage('payment');
+                        window.location.reload();
                     } else {
                         // Mixed or non-email gift certificate items in the cart
-                        e.preventDefault();
                         members.nextStage();
                     }
                 });
+
 
             // Handle Payment option selection
                 $('input[name$="paymentMethod"]', plugin).on('change', function () {
