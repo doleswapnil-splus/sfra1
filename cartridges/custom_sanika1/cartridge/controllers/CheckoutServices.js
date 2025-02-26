@@ -4,72 +4,6 @@ var server = require('server');
 var baseCheckoutServices = module.superModule;
 server.extend(baseCheckoutServices);
 
-//var BasketMgr = require('dw/order/BasketMgr');
-//var URLUtils = require('dw/web/URLUtils');
-//var Resource = require('dw/web/Resource');
-//var CartHelper = require('*/cartridge/scripts/cart/cartHelpers');
-
-// server.append('PlaceOrder', server.middleware.https, function (req, res, next) {
-//     var currentBasket = BasketMgr.getCurrentBasket();
-
-//     if (!currentBasket) {
-//         res.json({
-//             error: true,
-//             cartError: true,
-//             fieldErrors: [],
-//             serverErrors: [],
-//             redirectUrl: URLUtils.url('Cart-Show').toString()
-//         });
-//         return next();
-//     }
-//     //only email gift certificates
-//     var isEmailGiftCertificateOnly = CartHelper.checkGiftCertificateType(currentBasket);
-
-//    //if mix products
-//     if (!isEmailGiftCertificateOnly && currentBasket.defaultShipment.shippingAddress === null) {
-//         res.json({
-//             error: true,
-//             errorStage: {
-//                 stage: 'shipping',
-//                 step: 'address'
-//             },
-//             errorMessage: Resource.msg('error.no.shipping.address', 'checkout', null)
-//         });
-//         next();
-//     }
-//     return next();
-// });
-
-// server.replace('PlaceOrder', server.middleware.https, function (req, res, next) {
-//     var currentBasket = BasketMgr.getCurrentBasket();
-
-//     if (!currentBasket) {
-//         res.json({
-//             error: true,
-//             cartError: true,
-//             fieldErrors: [],
-//             serverErrors: [],
-//             redirectUrl: URLUtils.url('Cart-Show').toString()
-//         });
-//         return;
-//     }
-
-//     var isEmailGiftCertificateOnly = CartHelper.checkGiftCertificateType(currentBasket);
-
-//     if (!isEmailGiftCertificateOnly && (!currentBasket.defaultShipment || !currentBasket.defaultShipment.shippingAddress)) {
-//         res.json({
-//             error: true,
-//             errorStage: {
-//                 stage: 'shipping',
-//                 step: 'address'
-//             },
-//             errorMessage: Resource.msg('error.no.shipping.address', 'checkout', null)
-//         });
-//         return;
-//     }
-//     return next();
-// });
-
 server.replace('PlaceOrder', server.middleware.https, function (req, res, next) {
     var CartHelper = require('*/cartridge/scripts/cart/cartHelpers');
     var BasketMgr = require('dw/order/BasketMgr');
@@ -82,7 +16,6 @@ server.replace('PlaceOrder', server.middleware.https, function (req, res, next) 
     var COHelpers = require('*/cartridge/scripts/checkout/checkoutHelpers');
     var validationHelpers = require('*/cartridge/scripts/helpers/basketValidationHelpers');
     var addressHelpers = require('*/cartridge/scripts/helpers/addressHelpers');
-
     var currentBasket = BasketMgr.getCurrentBasket();
 
     if (!currentBasket) {
@@ -128,7 +61,6 @@ server.replace('PlaceOrder', server.middleware.https, function (req, res, next) 
         return next();
     }
     var isEmailGiftCertificateOnly = CartHelper.checkGiftCertificateType(currentBasket);
-
         if (!isEmailGiftCertificateOnly && currentBasket.defaultShipment.shippingAddress === null) {
             res.json({
                 error: true,
@@ -172,7 +104,6 @@ server.replace('PlaceOrder', server.middleware.https, function (req, res, next) 
         });
         return next();
     }
-
     // Re-calculate the payments.
     var calculatedPaymentTransactionTotal = COHelpers.calculatePaymentTransaction(currentBasket);
     if (calculatedPaymentTransactionTotal.error) {
@@ -182,7 +113,6 @@ server.replace('PlaceOrder', server.middleware.https, function (req, res, next) 
         });
         return next();
     }
-
     // Creates a new order.
     var order = COHelpers.createOrder(currentBasket);
     if (!order) {

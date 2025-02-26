@@ -11,24 +11,22 @@ server.extend(baseCheckout);
 server.append('Begin', function (req, res, next) {
 
     var Transaction = require('dw/system/Transaction');
-    var Resource = require('dw/web/Resource');
-    var collections = require('*/cartridge/scripts/util/collections');
     var CartHelper = require('*/cartridge/scripts/cart/cartHelpers');
-    var basketCalculationHelpers = require('*/cartridge/scripts/helpers/basketCalculationHelpers');
     var BasketMgr = require('dw/order/BasketMgr');
     var URLUtils = require('dw/web/URLUtils');
     var checkoutHelpers = require('*/cartridge/scripts/checkout/checkoutHelpers');
     var currentBasket = BasketMgr.getCurrentBasket();
-    var ShippingMgr = require('dw/order/ShippingMgr');
-    var Money = require('dw/value/Money');
-    var onlyEmailGiftCertificates = CartHelper.checkGiftCertificateType(currentBasket);
     var isAuthenticated = req.currentCustomer.raw.authenticated;
-    var checkoutData = checkoutHelpers.processCheckoutStages();
 
     if (!currentBasket) {
         res.redirect(URLUtils.url('Cart-Show'));
         return next();
     }
+   //Check for Giftcertificate Type email
+    var onlyEmailGiftCertificates = CartHelper.checkGiftCertificateType(currentBasket);
+
+   //Check for the freeShipping.
+   var checkoutData = checkoutHelpers.CheckoutFreeShipping();
 
     var requestStage = req.querystring.stage;
     var currentStage = requestStage || 'customer';

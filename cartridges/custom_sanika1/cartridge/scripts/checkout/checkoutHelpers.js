@@ -31,15 +31,15 @@ function ensureValidShipments(lineItemContainer) {
     return allValid;
 }
 
-function processCheckoutStages() {
+function CheckoutFreeShipping() {
     var Transaction = require('dw/system/Transaction');
     var Resource = require('dw/web/Resource');
     var CartHelper = require('*/cartridge/scripts/cart/cartHelpers');
     var basketCalculationHelpers = require('*/cartridge/scripts/helpers/basketCalculationHelpers');
-    var onlyEmailGiftCertificates = CartHelper.checkGiftCertificateType(currentBasket);
     var BasketMgr = require('dw/order/BasketMgr');
-    var currentBasket = BasketMgr.getCurrentBasket();
     var ShippingMgr = require('dw/order/ShippingMgr');
+    var currentBasket = BasketMgr.getCurrentBasket();
+    var onlyEmailGiftCertificates = CartHelper.checkGiftCertificateType(currentBasket);
 
     if (onlyEmailGiftCertificates) {
         Transaction.wrap(function () {
@@ -64,10 +64,8 @@ function processCheckoutStages() {
             basketCalculationHelpers.calculateTotals(currentBasket);
         });
     }
-
 }
 
 base.ensureValidShipments = ensureValidShipments;
-base.processCheckoutStages=processCheckoutStages;
-
+base.CheckoutFreeShipping=CheckoutFreeShipping;
 module.exports = base;
