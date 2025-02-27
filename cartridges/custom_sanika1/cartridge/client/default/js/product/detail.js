@@ -7,36 +7,24 @@ var custombase=require('./base');
  * Enable/disable UI elements
  */
 function updateGiftCerticate() {
-    $('body').on('change', 'input[name="giftCertificate"]', function (event) {
+    $('#paperGiftCertificate').prop('checked', true).trigger('change');
+    
+    function toggleButtons() {
         const $paperRadio = $('#paperGiftCertificate');
         const $personalizeButton = $('#personalizeButton');
         const $addToCart = $('#add-to-cart');
 
         if ($paperRadio.is(':checked')) {
-            $personalizeButton.hide();
-            $addToCart.show();
-        } else if ($('#emailGiftCertificate').is(':checked')) {
-            $personalizeButton.show();
-            $addToCart.hide();
+            $personalizeButton.hide(); // Hide personalize button
+            $addToCart.show(); // Show add to cart button
+        } else {
+            $personalizeButton.show(); // Show personalize button
+            $addToCart.hide(); // Hide add to cart button
         }
-
-        window.localStorage.setItem('giftCertificateType', $(this).val());
-    });
-
-    // Initial check to set the button state on page load
-    if ($('#paperGiftCertificate').is(':checked')) {
-        $('#personalizeButton').hide();
-    } else {
-        $('#personalizeButton').show();
     }
+    toggleButtons();
 
-    // Restore saved state from localStorage
-    $(document).ready(function () {
-        const savedType = window.localStorage.getItem('giftCertificateType');
-        if (savedType) {
-            $(`#emailGiftCertificate[value="${savedType}"]`).prop('checked', true);
-        }
-    });
+    $('body').on('change', 'input[name="giftCertificate"]', toggleButtons);
 }
 
 function updateAddToCart() {
