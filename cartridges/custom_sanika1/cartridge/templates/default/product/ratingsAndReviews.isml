@@ -5,12 +5,6 @@
 
 <isif condition="${pdict.ratingsAndReviews}">
     <div class="ratings-reviews">
-
-        <h2>
-            ${Resource.msg('ratings.reviews.title', 'ratingsAndReview', null)}
-            ${pdict.ratingsAndReviews.custom.ProductId}
-        </h2>
-
         <isif condition="${pdict.reviews && pdict.reviews.length > 0}">
             <h3>
                 ${Resource.msg('ratings.reviews.heading', 'ratingsAndReview', 'Customer Reviews')}
