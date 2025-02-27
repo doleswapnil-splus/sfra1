@@ -429,6 +429,7 @@ var history = window.history;
 
                     if (giftCertificateItems.length > 0 && nonGiftCertificateItems.length === 0) {
                         // Only email gift certificates in the cart
+                        members.updateStage();
                         members.gotoStage('payment');
                     } else {
                         // Mixed or non-email gift certificate items in the cart
