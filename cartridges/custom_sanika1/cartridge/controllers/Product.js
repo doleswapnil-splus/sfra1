@@ -2,7 +2,6 @@
 
 var server = require('server');
 server.extend(module.superModule);
-
 var wishlistHelper = require('*/cartridge/scripts/wishlist/wishlistHelpers');
 
 server.append('Show', function (req, res, next) {
