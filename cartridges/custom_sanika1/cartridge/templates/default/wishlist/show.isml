@@ -1,0 +1,68 @@
+<isdecorate template="common/layout/page">
+    <isscript>
+        var assets = require('*/cartridge/scripts/assets');
+        assets.addJs('/js/productTile.js');
+        assets.addCss('/css/wishlist.css');
+    </isscript>
+
+    <h2>${Resource.msg('wishlist.title', 'wishlist', null)}</h2>
+
+    <isif condition="${pdict.wishlistItems && !pdict.wishlistItems.empty}">
+        <div class="container product-detail product-wrapper">
+            <div class="wishlist-grid">
+                <isloop items="${pdict.wishlistItems}" var="item">
+                    <div class="product-tile wishlist">
+                        <!-- Product Image -->
+                        <a href="${URLUtils.url('Product-Show', 'pid', item.productListItem.product.ID)}">
+                            <div class="product-image-container">
+                                <img src="${item.imageURL}" alt="${item.product.getName()}" class="product-image" />
+                            </div>
+                        </a>
+
+                        <!-- Product Details -->
+                        <div class="product-details">
+                            <!-- Product Name -->
+                            <h3 class="product-name">${item.productListItem.product.getName()}</h3>
+
+                            <!-- Product Description -->
+                            <p class="product-description">${item.productListItem.product.getShortDescription()}</p>
+
+                            <!-- Product Price -->
+                            <p class="product-price">${Resource.msg('wishlist.price', 'wishlist', null)} <isprint value="${item.productListItem.product.getPriceModel().getMinPrice()}" encoding="off"/></p>
+
+                            <!-- Variant Attributes -->
+                            <div class="variant-attributes">
+                                <isif condition="${item.selectedVariantAttributes && !empty(item.selectedVariantAttributes)}">
+                                    <ul>
+                                        <isloop items="${Object.keys(item.selectedVariantAttributes)}" var="key">
+                                            <li>
+                                                <div class="product-option"
+                                                     data-display-name="${item.selectedVariantAttributes[key].displayName}"
+                                                     data-selected-value="${item.selectedVariantAttributes[key].selectedValue}">
+                                                    ${item.selectedVariantAttributes[key].displayName}: ${item.selectedVariantAttributes[key].selectedValue}
+                                                </div>
+                                            </li>
+                                        </isloop>
+                                    </ul>
+                                </isif>
+                            </div>
+
+                            <!-- Remove Button -->
+                             <div class="button-container">
+                                <form action="${URLUtils.url('WishlistHeart-Remove')}" method="post" class="remove-form">
+                                    <input type="hidden" name="pid" value="${item.productListItem.productID}" />
+                                    <button type="submit" class="remove-button">
+                                    ${Resource.msg('wishlist.remove.button', 'wishlist', null)}
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </isloop>
+            </div>
+        </div>
+    <iselse/>
+        <p>${Resource.msg('wishlist.empty', 'wishlist', null)}</p>
+    </isif>
+</isdecorate>
+ 

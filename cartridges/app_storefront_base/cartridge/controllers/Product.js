@@ -148,6 +148,7 @@ server.get('Variation', function (req, res, next) {
     });
 
     next();
+ 
 });
 
 /**

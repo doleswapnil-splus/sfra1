@@ -1,0 +1,46 @@
+<isscript>
+    var assets = require('*/cartridge/scripts/assets.js');
+    assets.addJs('/js/rating.js');
+</isscript>
+
+<div class="modal fade" id="ratingsModal" tabindex="-1" role="dialog" aria-labelledby="ratingsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ratingsModalLabel">
+                    ${Resource.msg('modal.rating.title', 'ratingsAndReview', null)}
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="rating">${Resource.msg('modal.rating.label', 'ratingsAndReview', null)}</label>
+                    <select id="rating" name="rating" class="form-control">
+                        <option value="" disabled selected>
+                            ${Resource.msg('modal.rating.select', 'ratingsAndReview', null)}
+                        </option>
+                        <option value="1">${Resource.msg('modal.rating.option1', 'ratingsAndReview', null)}</option>
+                        <option value="2">${Resource.msg('modal.rating.option2', 'ratingsAndReview', null)}</option>
+                        <option value="3">${Resource.msg('modal.rating.option3', 'ratingsAndReview', null)}</option>
+                        <option value="4">${Resource.msg('modal.rating.option4', 'ratingsAndReview', null)}</option>
+                        <option value="5">${Resource.msg('modal.rating.option5', 'ratingsAndReview', null)}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="review">${Resource.msg('modal.review.label', 'ratingsAndReview', null)}</label>
+                    <textarea class="form-control" id="review" name="review" rows="3" required></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    ${Resource.msg('modal.button.close', 'ratingsAndReview', null)}
+                </button>
+                <button type="button" class="btn btn-primary" id="submitReview">
+                    ${Resource.msg('modal.button.submit', 'ratingsAndReview', null)}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
