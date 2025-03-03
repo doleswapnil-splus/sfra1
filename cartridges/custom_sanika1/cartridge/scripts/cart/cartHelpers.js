@@ -34,7 +34,6 @@ function checkGiftCertificateType(basket) {
     // Return true only if all items are email gift certificates
     return hasEmailGiftCertificate && !hasNonEmailGiftCertificate;
 }
-
 /**
  * Adds a product to the cart. If the product is already in the cart it increases the quantity of
  * that product.
