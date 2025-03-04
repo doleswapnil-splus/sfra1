@@ -1,15 +1,12 @@
-'use strict';
 
-var customerHelpers = require('./customer');
-var addressHelpers = require('./address');
-var shippingHelpers = require('./shipping');
-var billingHelpers = require('./billing');
-var summaryHelpers = require('./summary');
-var formHelpers = require('./formErrors');
-var scrollAnimate = require('../components/scrollAnimate');
+var base = require('base/checkout/checkout');
+
+var customerHelpers = require('base/checkout/customer');
+var shippingHelpers = require('base/checkout/shipping');
+var formHelpers = require('base/checkout/formErrors');
+var scrollAnimate = require('base/components/scrollAnimate');
 var location = window.location;
 var history = window.history;
-
 /**
  * Create the jQuery Checkout Plugin.
  *
@@ -410,37 +407,69 @@ var history = window.history;
              * TODO: update this to allow stage to be set from server?
              */
             initialize: function () {
-                // set the initial state of checkout
-                members.currentStage = checkoutStages
-                    .indexOf($('.data-checkout-stage').data('checkout-stage'));
-                $(plugin).attr('data-checkout-stage', checkoutStages[members.currentStage]);
+                members.currentStage = checkoutStages.indexOf(
+                    $('.data-checkout-stage').data('checkout-stage')
+                );
+
+                $(plugin).attr(
+                    'data-checkout-stage',
+                    checkoutStages[members.currentStage]
+                );
 
                 $('body').on('click', '.submit-customer-login', function (e) {
                     e.preventDefault();
-                    members.nextStage();
+                    var giftCertificateItems = $('.cart-items').filter(function () {
+                        return $(this).data('gift-certificate-type') === 'email';
+                    });
+
+                    var nonGiftCertificateItems = $('.cart-items').filter(function () {
+                        var giftCertificateType = $(this).data('gift-certificate-type');
+                        return giftCertificateType === 'paper' || giftCertificateType === 'none';
+                    });
+
+                    if (giftCertificateItems.length > 0 && nonGiftCertificateItems.length === 0) {
+                        // Only email gift certificates in the cart
+                        members.updateStage();
+                        members.gotoStage('payment');
+                    } else {
+                        // Mixed or non-email gift certificate items in the cart
+                        members.nextStage();
+                    }
                 });
 
                 $('body').on('click', '.submit-customer', function (e) {
                     e.preventDefault();
-                    members.nextStage();
+                    var giftCertificateItems = $('.cart-items').filter(function () {
+                        return $(this).data('gift-certificate-type') === 'email';
+                    });
+
+                    var nonGiftCertificateItems = $('.cart-items').filter(function () {
+                        var giftCertificateType = $(this).data('gift-certificate-type');
+                        return giftCertificateType === 'paper' || giftCertificateType === 'none';
+                    });
+
+                    if (giftCertificateItems.length > 0 && nonGiftCertificateItems.length === 0) {
+                        // Only email gift certificates in the cart
+                        members.updateStage();
+                        members.gotoStage('payment');
+                    } else {
+                        // Mixed or non-email gift certificate items in the cart
+                        members.nextStage();
+                    }
                 });
-                
-                // Handle Payment option selection
-                //
+
+
+            // Handle Payment option selection
                 $('input[name$="paymentMethod"]', plugin).on('change', function () {
                     $('.credit-card-form').toggle($(this).val() === 'CREDIT_CARD');
                 });
 
-                //
                 // Handle Next State button click
-                //
                 $(plugin).on('click', '.next-step-button button', function () {
                     members.nextStage();
                 });
 
-                //
                 // Handle Edit buttons on shipping and payment summary cards
-                //
                 $('.customer-summary .edit-button', plugin).on('click', function () {
                     members.gotoStage('customer');
                 });
@@ -449,7 +478,6 @@ var history = window.history;
                     if (!$('#checkout-main').hasClass('multi-ship')) {
                         $('body').trigger('shipping:selectSingleShipping');
                     }
-
                     members.gotoStage('shipping');
                 });
 
@@ -457,32 +485,22 @@ var history = window.history;
                     members.gotoStage('payment');
                 });
 
-                //
-                // remember stage (e.g. shipping)
-                //
                 updateUrl(members.currentStage);
 
-                //
-                // Listen for foward/back button press and move to correct checkout-stage
-                //
+                // Listen for forward/back button press and move to the correct checkout-stage
                 $(window).on('popstate', function (e) {
-                    //
-                    // Back button when event state less than current state in ordered
-                    // checkoutStages array.
-                    //
-                    if (e.state === null
-                        || checkoutStages.indexOf(e.state) < members.currentStage) {
+                    if (
+                        e.state === null ||
+                        checkoutStages.indexOf(e.state) < members.currentStage
+                    ) {
                         members.handlePrevStage(false);
                     } else if (checkoutStages.indexOf(e.state) > members.currentStage) {
-                        // Forward button  pressed
                         members.handleNextStage(false);
                     }
                 });
 
-                //
-                // Set the form data
-                //
                 plugin.data('formData', formData);
+
             },
 
             /**
@@ -576,59 +594,10 @@ var history = window.history;
     };
 }(jQuery));
 
-var exports = {
-    initialize: function () {
-        $('#checkout-main').checkout();
-    },
+function initialize () {
+    $('#checkout-main').checkout();
+}
 
-    updateCheckoutView: function () {
-        $('body').on('checkout:updateCheckoutView', function (e, data) {
-            if (data.csrfToken) {
-                $("input[name*='csrf_token']").val(data.csrfToken);
-            }
-            customerHelpers.methods.updateCustomerInformation(data.customer, data.order);
-            shippingHelpers.methods.updateMultiShipInformation(data.order);
-            summaryHelpers.updateTotals(data.order.totals);
-            data.order.shipping.forEach(function (shipping) {
-                shippingHelpers.methods.updateShippingInformation(
-                    shipping,
-                    data.order,
-                    data.customer,
-                    data.options
-                );
-            });
-            billingHelpers.methods.updateBillingInformation(
-                data.order,
-                data.customer,
-                data.options
-            );
-            billingHelpers.methods.updatePaymentInformation(data.order, data.options);
-            summaryHelpers.updateOrderProductSummaryInformation(data.order, data.options);
-        });
-    },
-
-    disableButton: function () {
-        $('body').on('checkout:disableButton', function (e, button) {
-            $(button).prop('disabled', true);
-        });
-    },
-
-    enableButton: function () {
-        $('body').on('checkout:enableButton', function (e, button) {
-            $(button).prop('disabled', false);
-        });
-    }
-
-};
-
-[customerHelpers, billingHelpers, shippingHelpers, addressHelpers].forEach(function (library) {
-    Object.keys(library).forEach(function (item) {
-        if (typeof library[item] === 'object') {
-            exports[item] = $.extend({}, exports[item], library[item]);
-        } else {
-            exports[item] = library[item];
-        }
-    });
-});
-
-module.exports = exports;
+// Override the initialize method
+base.initialize = initialize;
+module.exports = base;

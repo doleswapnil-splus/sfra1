@@ -1,0 +1,59 @@
+<isset name="hasEmbeddedBonusProducts" value="${lineItem.bonusProductLineItemUUID === 'bonus'}" scope="page" />
+<isset name="bonusproductlineitem" value="${hasEmbeddedBonusProducts ? 'bonus-product-line-item' : ''}" scope="page" />
+<isset name="bonuslineitemrow" value="${hasEmbeddedBonusProducts ? 'bonus-line-item-row' : ''}" scope="page" />
+<isset name="items" value="${items && items.length > 0}" scope="page" />
+
+<div class="card product-info ${bonusproductlineitem} uuid-${lineItem.UUID}">
+    <!-- Name and remove buttons -->
+    <isinclude template="cart/productCard/cartProductCardHeader" />
+    <div class="row ${bonuslineitemrow}">
+        <div class="col-lg-5">
+            <div class="row">
+                <div class="col-lg-12 d-flex flex-row">
+                    <div class="item-image">
+                        <img class="product-image" src="${lineItem.images.small[0].url}" alt="${lineItem.images.small[0].alt}" title="${lineItem.images.small[0].title}" />
+                    </div>
+                    <div class="item-attributes d-flex flex-column">
+                        <isloop items="${lineItem.variationAttributes}" var="attribute">
+                            <p class="line-item-attributes ${attribute.displayName}-${lineItem.UUID}">
+                                ${attribute.displayName}: ${attribute.displayValue}
+                            </p>
+                        </isloop>
+                        <isloop items="${lineItem.options}" var="option">
+                            <isif condition="${!!option}">
+                                <div class="lineItem-options-values" data-option-id="${option.optionId}" data-value-id="${option.selectedValueId}">
+                                    <p class="line-item-attributes">${option.displayName}</p>
+                                </div>
+                            </isif>
+                        </isloop>
+                        <!-- Check if product is a Gift Certificate -->
+                        <isif condition="${lineItem.isGiftCertificate}">
+                            <div class="cart-items" data-gift-certificate-type="${lineItem.giftCertificateObj.giftCertificateType}">
+                                <p>${Resource.msg('giftCertificate.type', 'giftCertificate', null)}${lineItem.giftCertificateObj.giftCertificateType}</p>
+                                <p>${Resource.msg('giftCertificate.FirstName', 'giftCertificate', null)}${lineItem.giftCertificateObj.firstName}</p>
+                                <p>${Resource.msg('giftCertificate.LastName', 'giftCertificate', null)}${lineItem.giftCertificateObj.lastName}</p>
+                                <p>${Resource.msg('giftCertificate.email', 'giftCertificate', null)}${lineItem.giftCertificateObj.email}</p>
+                            </div>
+                        </isif>
+                        <isinclude template="cart/productCard/cartProductCardAvailability" />
+                        <isinclude template="cart/productCard/cartProductCardEdit" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 d-lg-none">
+            <hr class="line-item-divider" />
+        </div>
+
+        <isinclude template="cart/productCard/cartProductCardProductPrice" />
+
+        <isif condition="${!lineItem.isBonusProductLineItem}">
+            <div class="hidden-md-down">
+                <isinclude template="components/deleteButton" />
+            </div>
+        </isif>
+    </div>
+    <isif condition="${lineItem.bonusProductLineItemUUID === 'bonus'}">
+        <isinclude template="cart/productCard/cartEmbeddedBonusProducts" />
+    </isif>
+</div>

@@ -1,0 +1,8 @@
+
+<isif condition="${pdict.successMessage}">
+    <div class="alert alert-danger">
+       <p>${pdict.successMessage}</p>
+    </div>
+</isif>
+
+
