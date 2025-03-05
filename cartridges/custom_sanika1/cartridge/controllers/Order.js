@@ -12,6 +12,7 @@ var Resource = require('dw/web/Resource');
 var URLUtils = require('dw/web/URLUtils');
 
 server.append('Confirm',function (req, res, next) {
+    
         var OrderMgr = require('dw/order/OrderMgr');
         var Locale = require('dw/util/Locale');
         var Site = require('dw/system/Site');
@@ -35,8 +36,8 @@ server.append('Confirm',function (req, res, next) {
             return next();
         }
         var lastOrderID = Object.prototype.hasOwnProperty.call(req.session.raw.custom, 'orderID')
-            ? req.session.raw.custom.orderID
-            : null;
+        ? req.session.raw.custom.orderID  : null;
+
         if (lastOrderID === req.querystring.ID) {
             res.redirect(URLUtils.url('Home-Show'));
             return next();
