@@ -2,7 +2,6 @@
 
 var base = module.superModule;
 
-
 /**
  * Creates a plain object that contains profile information
  * @param {Object} profile - current customer's profile
@@ -18,7 +17,7 @@ function getProfile(profile) {
             email: profile.email,
             phone: Object.prototype.hasOwnProperty.call(profile, 'phone') ? profile.phone : profile.phoneHome,
             password: '********',
-            totalRewardPoints:profile.totalRewardPoints 
+            totalRewardPoints:profile.totalRewardPoints
         };
     } else {
         result = null;
@@ -35,8 +34,8 @@ function getProfile(profile) {
  */
 
 function account(currentCustomer, addressModel, orderModel) {
-    base.call(this,currentCustomer,addressModel,orderModel); //It will give it a call to base cartridge.
+    base.call(this,currentCustomer,addressModel,orderModel);
     this.profile=getProfile(currentCustomer.profile);
-
 }
+
 module.exports = account;

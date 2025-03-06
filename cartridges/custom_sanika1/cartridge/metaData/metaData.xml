@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata xmlns="http://www.demandware.com/xml/impex/metadata/2006-10-31">
+   
+    <type-extension type-id="Order">
+        <custom-attribute-definitions>
+            <attribute-definition attribute-id="rewardPoints">
+                <display-name xml:lang="x-default">Reward Points</display-name>
+                <type>int</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
+        </custom-attribute-definitions>
+        <group-definitions>
+            <attribute-group group-id="RewardPoints">
+                <display-name xml:lang="x-default">RewardPoints</display-name>
+                <attribute attribute-id="rewardPoints"/>
+            </attribute-group>
+        </group-definitions>
+    </type-extension>
+	
+    <type-extension type-id="ProductLineItem"> 
+        <custom-attribute-definitions>
+            <attribute-definition attribute-id="email">
+                <display-name xml:lang="x-default">email</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="firstName">
+                <display-name xml:lang="x-default">firstName</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="giftCertificateType">
+                <display-name xml:lang="x-default">giftCertificateType</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="isGiftCertificate">
+                <display-name xml:lang="x-default">isGiftCertificate</display-name>
+                <type>boolean</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
+            <attribute-definition attribute-id="lastName">
+                <display-name xml:lang="x-default">lastName</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition> 
+        </custom-attribute-definitions>
+    </type-extension>
+	
+    <type-extension type-id="Profile">
+        <custom-attribute-definitions>
+            <attribute-definition attribute-id="totalRewardPoints">
+                <display-name xml:lang="x-default">totalRewardPoints</display-name>
+                <type>int</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
+        </custom-attribute-definitions>
+        <group-definitions>
+            <attribute-group group-id="Standard">
+                <display-name xml:lang="x-default">Profile Attributes</display-name>
+                <attribute attribute-id="salutation" system="true"/>
+                <attribute attribute-id="title" system="true"/>
+                <attribute attribute-id="companyName" system="true"/>
+                <attribute attribute-id="jobTitle" system="true"/>
+                <attribute attribute-id="firstName" system="true"/>
+                <attribute attribute-id="middleName"/>
+                <attribute attribute-id="lastName" system="true"/>
+                <attribute attribute-id="suffix" system="true"/>
+                <attribute attribute-id="gender" system="true"/>
+                <attribute attribute-id="birthday" system="true"/>
+                <attribute attribute-id="email" system="true"/>
+                <attribute attribute-id="nextBirthday" system="true"/>
+                <attribute attribute-id="secondName" system="true"/>
+                <attribute attribute-id="totalRewardPoints"/>
+            </attribute-group>
+        </group-definitions>
+    </type-extension>
+
+    <type-extension type-id="SitePreferences">
+        <custom-attribute-definitions>
+            <attribute-definition attribute-id="GC_Amount">
+                <display-name xml:lang="x-default">Amount</display-name>
+                <type>set-of-string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
+            
+            <attribute-definition attribute-id="rewardPointsToAmount">
+                <display-name xml:lang="x-default">Reward Points to Amount Conversion</display-name>
+                <type>double</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <default-value>10</default-value>
+            </attribute-definition>
+        </custom-attribute-definitions>
+        <group-definitions>
+            <attribute-group group-id="Trail1">
+                <display-name xml:lang="x-default">Trail1</display-name>
+                <attribute attribute-id="String_Attribute1"/>
+                <attribute attribute-id="Text_Attribute"/>
+                <attribute attribute-id="integer_Attribute"/>
+                <attribute attribute-id="Email_Attribute"/>
+                <attribute attribute-id="GC_Amount"/>
+                <attribute attribute-id="Customisation"/>
+                <attribute attribute-id="rewardPointsToAmount"/>
+            </attribute-group>
+        </group-definitions>
+    </type-extension>
+
+    <custom-type type-id="Ratings_And_Reviews">
+        <display-name xml:lang="x-default">Ratings_And_Reviews</display-name>
+        <description xml:lang="x-default">This is custom object for Ratings and Reviews.</description>
+        <staging-mode>no-staging</staging-mode>
+        <storage-scope>organization</storage-scope>
+        <key-definition attribute-id="ProductId">
+            <type>string</type>
+            <min-length>0</min-length>
+        </key-definition>
+        <attribute-definitions>
+            <attribute-definition attribute-id="Avarage_Ratings">
+                <display-name xml:lang="x-default">Avarage_Ratings</display-name>
+                <type>double</type>
+                <localizable-flag>false</localizable-flag>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
+            <attribute-definition attribute-id="Review">
+                <display-name xml:lang="x-default">Review</display-name>
+                <description xml:lang="x-default">This is Review attribute in custom object ratings and reviews.</description>
+                <type>string</type>
+                <localizable-flag>false</localizable-flag>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="email">
+                <display-name xml:lang="x-default">email</display-name>
+                <type>string</type>
+                <localizable-flag>false</localizable-flag>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+        </attribute-definitions>
+        <group-definitions>
+            <attribute-group group-id="RatingsReviews">
+                <display-name xml:lang="x-default">RatingsReviews</display-name>
+                <attribute attribute-id="ProductId"/>
+                <attribute attribute-id="Avarage_Ratings"/>
+                <attribute attribute-id="Review"/>
+                <attribute attribute-id="email"/>
+            </attribute-group>
+        </group-definitions>
+    </custom-type>
+
+</metadata>

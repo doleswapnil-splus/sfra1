@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shipping xmlns="http://www.demandware.com/xml/impex/shipping/2007-03-31">
+    <shipping-method method-id="free-shipping" default="false">
+        <display-name xml:lang="x-default">Free Shipping for Gift Certificates</display-name>
+        <online-flag>true</online-flag>
+        <price-table>
+            <amount order-value="0">0</amount>
+        </price-table>
+        <product-cost-groups>
+            <product-cost-group>
+                <products>
+                    <included-products>
+                        <condition-group>
+                            <product-id-condition operator="is equal">
+                                <product-id>25_GiftCertificate</product-id>
+                                <product-id>50_GiftCertificate</product-id>
+                                <product-id>Gift_Certificate</product-id>
+                            </product-id-condition>
+                        </condition-group>
+                    </included-products>
+                </products>
+                <cost-per-item>
+                    <fixed-price>0.00</fixed-price>
+                </cost-per-item>
+            </product-cost-group>
+        </product-cost-groups>
+        <custom-attributes>
+            <custom-attribute attribute-id="storePickupEnabled">false</custom-attribute>
+        </custom-attributes>
+    </shipping-method>
+
+</shipping>
