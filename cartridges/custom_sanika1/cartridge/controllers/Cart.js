@@ -124,4 +124,30 @@ server.replace('AddProduct', function (req, res, next) {
     next();
 });
 
+server.append('Show', function (req, res, next) {
+    var CustomObjectMgr = require('dw/object/CustomObjectMgr');
+    var viewData = res.getViewData(); 
+
+    var savedItems = [];
+    var savedIterator = CustomObjectMgr.getAllCustomObjects('SavedForLater');
+
+    while (savedIterator.hasNext()) {
+        var savedItem = savedIterator.next();
+        savedItems.push({
+            productId: savedItem.custom.ProductId,
+            name: savedItem.custom.name,
+            price: savedItem.custom.price,
+            image: savedItem.custom.image,
+            quantity: savedItem.custom.quantity,
+            options: JSON.parse(savedItem.custom.options || '[]')
+        });
+    }
+
+    // Add saved items to view data
+    viewData.savedItems = savedItems;
+    res.setViewData(viewData);
+
+    next();
+});
+
 module.exports = server.exports();

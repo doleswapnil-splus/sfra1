@@ -1,0 +1,43 @@
+<!-- Save for Later Section -->
+<div class="container saved-for-later-section">
+    <h2>${Resource.msg('title.savedforlater', 'saveForLater', null)}</h2>
+    <isif condition="${pdict.savedItems.length > 0}">
+        <div class="row">
+            <isloop items="${pdict.savedItems}" var="savedItem">
+                <div class="col-sm-3 saved-item">
+                    <div class="saved-item-card">
+                        <img src="${savedItem.image}" alt="${savedItem.name}" class="img-fluid">
+                        <h3 class="saved-item-name">${savedItem.name}</h3>
+                        <p>
+                            <strong>${Resource.msg('label.price', 'saveForLater', null)}:</strong> ${savedItem.price}
+                        </p>
+                        <p>
+                            <strong>${Resource.msg('label.quantity', 'saveForLater', null)}:</strong> ${savedItem.quantity}
+                        </p>
+
+                        <!-- Display Variant Attributes -->
+                        <isif condition="${savedItem.options && savedItem.options.length > 0}">
+                            <ul>
+                                <isloop items="${savedItem.options}" var="option">
+                                    <li>${option.displayName}: ${option.selectedValue}</li>
+                                </isloop>
+                            </ul>
+                        </isif>
+
+                        <!-- Add to Cart Button -->
+                        <button class="btn btn-primary add-to-cart" data-product-id="${savedItem.productId}">
+                            ${Resource.msg('button.addtocart', 'saveForLater', null)}
+                        </button>
+
+                        <!-- Remove Saved Item Button -->
+                        <button class="btn btn-danger remove-saved-item" data-product-id="${savedItem.productId}">
+                            ${Resource.msg('button.remove', 'saveForLater', null)}
+                        </button>
+                    </div>
+                </div>
+            </isloop>
+        </div>
+    <iselse/>
+        <p>${Resource.msg('info.nosaveditems', 'saveForLater', null)}</p>
+    </isif>
+</div>

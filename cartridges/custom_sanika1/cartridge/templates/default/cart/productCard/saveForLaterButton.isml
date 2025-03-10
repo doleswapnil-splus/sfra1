@@ -1,0 +1,3 @@
+<button class="btn btn-link save-for-later-btn" data-product-id="${lineItem.id}">
+    ${Resource.msg('saveForLater.button.productCard', 'saveForLater', null)}
+</button>
