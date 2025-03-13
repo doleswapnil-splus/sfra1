@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <metadata xmlns="http://www.demandware.com/xml/impex/metadata/2006-10-31">
-   
+
     <type-extension type-id="Order">
         <custom-attribute-definitions>
             <attribute-definition attribute-id="rewardPoints">
@@ -17,8 +17,8 @@
             </attribute-group>
         </group-definitions>
     </type-extension>
-	
-    <type-extension type-id="ProductLineItem"> 
+
+    <type-extension type-id="ProductLineItem">
         <custom-attribute-definitions>
             <attribute-definition attribute-id="email">
                 <display-name xml:lang="x-default">email</display-name>
@@ -53,10 +53,10 @@
                 <mandatory-flag>false</mandatory-flag>
                 <externally-managed-flag>false</externally-managed-flag>
                 <min-length>0</min-length>
-            </attribute-definition> 
+            </attribute-definition>
         </custom-attribute-definitions>
     </type-extension>
-	
+
     <type-extension type-id="Profile">
         <custom-attribute-definitions>
             <attribute-definition attribute-id="totalRewardPoints">
@@ -95,7 +95,7 @@
                 <mandatory-flag>false</mandatory-flag>
                 <externally-managed-flag>false</externally-managed-flag>
             </attribute-definition>
-            
+
             <attribute-definition attribute-id="rewardPointsToAmount">
                 <display-name xml:lang="x-default">Reward Points to Amount Conversion</display-name>
                 <type>double</type>
@@ -160,6 +160,111 @@
                 <attribute attribute-id="Avarage_Ratings"/>
                 <attribute attribute-id="Review"/>
                 <attribute attribute-id="email"/>
+            </attribute-group>
+        </group-definitions>
+    </custom-type>
+
+    <custom-type type-id="SavedForLater">
+        <display-name xml:lang="x-default">SavedForLater</display-name>
+        <description xml:lang="x-default">SavedForLater Product</description>
+        <staging-mode>no-staging</staging-mode>
+        <storage-scope>organization</storage-scope>
+        <key-definition attribute-id="ProductId">
+            <type>string</type>
+            <min-length>0</min-length>
+        </key-definition>
+        <attribute-definitions>
+            <attribute-definition attribute-id="email">
+                <display-name xml:lang="x-default">email</display-name>
+                <type>string</type>
+                <localizable-flag>false</localizable-flag>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="firstName">
+                <display-name xml:lang="x-default">firstName</display-name>
+                <type>string</type>
+                <localizable-flag>false</localizable-flag>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="giftCertificateType">
+                <display-name xml:lang="x-default">giftCertificateType</display-name>
+                <type>string</type>
+                <localizable-flag>false</localizable-flag>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="image">
+                <display-name xml:lang="x-default">image</display-name>
+                <type>string</type>
+                <localizable-flag>false</localizable-flag>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="isGiftCertificate">
+                <display-name xml:lang="x-default">isGiftCertificate</display-name>
+                <type>boolean</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
+            <attribute-definition attribute-id="lastName">
+                <display-name xml:lang="x-default">lastName</display-name>
+                <type>string</type>
+                <localizable-flag>false</localizable-flag>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="name">
+                <display-name xml:lang="x-default">name</display-name>
+                <type>string</type>
+                <localizable-flag>false</localizable-flag>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="options">
+                <display-name xml:lang="x-default">options</display-name>
+                <type>string</type>
+                <localizable-flag>false</localizable-flag>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="price">
+                <display-name xml:lang="x-default">price</display-name>
+                <description xml:lang="x-default">price</description>
+                <type>double</type>
+                <localizable-flag>false</localizable-flag>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
+            <attribute-definition attribute-id="quantity">
+                <display-name xml:lang="x-default">quantity</display-name>
+                <type>double</type>
+                <localizable-flag>false</localizable-flag>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
+        </attribute-definitions>
+        <group-definitions>
+            <attribute-group group-id="SavedForLater">
+                <attribute attribute-id="name"/>
+                <attribute attribute-id="ProductId"/>
+                <attribute attribute-id="price"/>
+                <attribute attribute-id="image"/>
+                <attribute attribute-id="quantity"/>
+                <attribute attribute-id="options"/>
+                <attribute attribute-id="isGiftCertificate"/>
+                <attribute attribute-id="giftCertificateType"/>
+                <attribute attribute-id="email"/>
+                <attribute attribute-id="firstName"/>
+                <attribute attribute-id="lastName"/>
             </attribute-group>
         </group-definitions>
     </custom-type>
