@@ -56,5 +56,4 @@
     <isif condition="${lineItem.bonusProductLineItemUUID === 'bonus'}">
         <isinclude template="cart/productCard/cartEmbeddedBonusProducts" />
     </isif>
-     <isinclude template="cart/productCard/saveForLaterButton" />
 </div>

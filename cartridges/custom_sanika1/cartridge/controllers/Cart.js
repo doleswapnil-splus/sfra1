@@ -126,7 +126,7 @@ server.replace('AddProduct', function (req, res, next) {
 
 server.append('Show', function (req, res, next) {
     var CustomObjectMgr = require('dw/object/CustomObjectMgr');
-    var viewData = res.getViewData(); 
+    var viewData = res.getViewData();
 
     var savedItems = [];
     var savedIterator = CustomObjectMgr.getAllCustomObjects('SavedForLater');
@@ -139,11 +139,14 @@ server.append('Show', function (req, res, next) {
             price: savedItem.custom.price,
             image: savedItem.custom.image,
             quantity: savedItem.custom.quantity,
-            options: JSON.parse(savedItem.custom.options || '[]')
+            options: JSON.parse(savedItem.custom.options || '[]'),
+            isGiftCertificate:savedItem.custom.isGiftCertificate,
+            giftCertificateType:savedItem.custom.giftCertificateType,
+            firstName:savedItem.custom.firstName,
+            lastName:savedItem.custom.lastName,
+            email:savedItem.custom.email
         });
     }
-
-    // Add saved items to view data
     viewData.savedItems = savedItems;
     res.setViewData(viewData);
 

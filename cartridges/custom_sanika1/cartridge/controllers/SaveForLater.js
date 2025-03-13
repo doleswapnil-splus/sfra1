@@ -74,6 +74,14 @@ server.post('AddToCart', function (req, res, next) {
             }
         });
 
+        if (savedItem.custom.isGiftCertificate && savedItem.custom.giftCertificateType==='email') {
+            productLineItem.custom.isGiftCertificate = savedItem.custom.isGiftCertificate;
+            productLineItem.custom.giftCertificateType = savedItem.custom.giftCertificateType;
+            productLineItem.custom.firstName = savedItem.custom.firstName;
+            productLineItem.custom.lastName = savedItem.custom.lastName;
+            productLineItem.custom.email = savedItem.custom.email;
+        }
+
         CustomObjectMgr.remove(savedItem);
     });
 
