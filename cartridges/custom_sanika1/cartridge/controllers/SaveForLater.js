@@ -8,8 +8,35 @@ var CustomObjectMgr = require('dw/object/CustomObjectMgr');
 var Resource = require('dw/web/Resource');
 var customObject = "SavedForLater";
 var currentBasket = BasketMgr.getCurrentBasket();
+var ISML = require('dw/template/ISML');
+var CartModel = require('*/cartridge/models/cart'); // Import cart model if needed
+var cartHelper = require('*/cartridge/scripts/cart/cartHelpers'); // Your helper file for cart operations
+
+
+// server.post('SaveItem', function (req, res, next) {
+//     if (!currentBasket) {
+//         res.json({ success: false, error: Resource.msg('CurrentBasket.Error', 'saveForLater', null) });
+//         return next();
+//     }
+
+//     var productId = req.form.productId;
+//     if (!productId) {
+//         res.json({ success: false, error: Resource.msg('Invalid.ProductId', 'saveForLater', null) });
+//         return next();
+//     }
+
+//     Transaction.wrap(function () {
+//         SavedProductsHelper.saveForLater(currentBasket, productId); //Remove item from cart
+//     });
+
+//     res.json({ success: true });
+//     return next();
+// });
 
 server.post('SaveItem', function (req, res, next) {
+    var renderTemplateHelper = require('*/cartridge/scripts/renderTemplateHelper');
+    var currentBasket = BasketMgr.getCurrentBasket();
+
     if (!currentBasket) {
         res.json({ success: false, error: Resource.msg('CurrentBasket.Error', 'saveForLater', null) });
         return next();
@@ -21,13 +48,32 @@ server.post('SaveItem', function (req, res, next) {
         return next();
     }
 
+  
     Transaction.wrap(function () {
-        SavedProductsHelper.saveForLater(currentBasket, productId); //Remove item from cart
+        SavedProductsHelper.saveForLater(currentBasket, productId);
     });
 
-    res.json({ success: true });
+
+    var cartModel = new CartModel(currentBasket);
+    var cartItems = cartModel.items || [];
+    var cartTotals = cartModel.totals || {};
+
+
+    var updatedProductCards = cartItems.length > 0
+        ? ISML.renderTemplate('cart/cartProductList', { pdict: { items: cartItems } })
+        : '<p>Your cart is empty.</p>';
+
+    var updatedGrandTotal = cartTotals.grandTotal ? cartTotals.grandTotal : '0.00';
+
+    res.json({
+        success: true,
+        updatedProductCards: updatedProductCards,
+        updatedGrandTotal: updatedGrandTotal
+    });
+
     return next();
 });
+
 
 server.post('Remove', function (req, res, next) {
     var productId = req.form.productId;
