@@ -28,6 +28,7 @@ if (itemToSave) {
         savedItem.custom.price = itemToSave.product.getPriceModel().getPrice().getValue();
         savedItem.custom.image = itemToSave.product.getImage('small').getURL();
         savedItem.custom.quantity = itemToSave.quantityValue;
+        savedItem.custom.uuId = itemToSave.UUID;
 
 
     var variantAttributes = [];
@@ -61,7 +62,9 @@ if (itemToSave) {
     basket.removeProductLineItem(itemToSave);
 
     });
+    return itemToSave;
 }
+  return null;
 }
 
 module.exports = {

@@ -7,7 +7,7 @@
     <isif condition="${pdict.savedItems.length > 0}">
         <div class="row">
             <isloop items="${pdict.savedItems}" var="savedItem">
-                <div class="col-12 saved-item">
+               <div class="col-12 saved-item saved-item-${savedItem.productId}">
                     <div class="row align-items-center saved-item-card p-3 border rounded">
                         <!-- Product Image -->
                         <div class="col-md-2 text-center">
@@ -41,7 +41,7 @@
 
                         <!-- Action Buttons -->
                         <div class="col-md-4 text-right d-flex justify-content-end">
-                            <button class="btn btn-primary add-to-cart mr-2" data-product-id="${savedItem.productId}">
+                            <button class="btn btn-primary add-to-cart mr-2" data-product-id="${savedItem.productId}" data-uuid="${savedItem.custom.uuId}">
                                 ${Resource.msg('button.addtocart', 'saveForLater', null)}
                             </button>
                             <button class="btn btn-danger remove-saved-item" data-product-id="${savedItem.productId}">
