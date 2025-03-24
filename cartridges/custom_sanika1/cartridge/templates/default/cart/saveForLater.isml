@@ -1,13 +1,14 @@
+
 <!-- Save for Later Section -->
 <div class="container saved-for-later-section" id="saveForLaterContainer">
     <h2 class="saved-for-later-title text-center">
         ${Resource.msg('title.savedforlater', 'saveForLater', null)}
     </h2>
 
-    <isif condition="${pdict.savedItems.length > 0}">
+    <isif condition="${pdict.savedItems.length!=0}">
         <div class="row">
             <isloop items="${pdict.savedItems}" var="savedItem">
-               <div class="col-12 saved-item saved-item-${savedItem.productId}">
+                <div class="col-12 saved-item saved-item-${savedItem.productID}">
                     <div class="row align-items-center saved-item-card p-3 border rounded">
                         <!-- Product Image -->
                         <div class="col-md-2 text-center">
@@ -17,34 +18,38 @@
                         <!-- Product Details -->
                         <div class="col-md-6">
                             <h3 class="saved-item-name">${savedItem.name}</h3>
-                            <p>${Resource.msg('label.price', 'saveForLater', null)}:${savedItem.price}</p>
+                            <p>${Resource.msg('label.price', 'saveForLater', null)}: ${savedItem.price}</p>
 
                             <!-- Display Variant Attributes -->
-                            <isif condition="${savedItem.options && savedItem.options.length > 0}">
-                                <ul class="saved-item-options">
-                                    <isloop items="${savedItem.options}" var="option">
-                                        <li>${option.displayName}: ${option.selectedValue}</li>
-                                    </isloop>
-                                </ul>
-                            </isif>
+                            <ul class="saved-item-options">
+                                <isloop items="${JSON.parse(savedItem.selectedVariantAttributes)}" var="option">
+                                    <li>${option.displayName}: ${option.selectedValue}</li>
+                                </isloop>
+                            </ul>
 
                             <!-- Gift Certificate Details -->
-                            <isif condition="${savedItem.isGiftCertificate && savedItem.giftCertificateType === 'email'}">
+                            <isif condition="${savedItem.isGiftCertificate}">
                                 <div class="gift-certificate-details">
-                                    <p>${Resource.msg('giftCertificate.type', 'giftCertificate', null)} ${savedItem.giftCertificateType}</p>
-                                    <p>${Resource.msg('giftCertificate.FirstName', 'giftCertificate', null)} ${savedItem.firstName}</p>
-                                    <p>${Resource.msg('giftCertificate.LastName', 'giftCertificate', null)}${savedItem.lastName}</p>
-                                    <p>${Resource.msg('giftCertificate.email', 'giftCertificate', null)} ${savedItem.email}</p>
+                                    <p>${Resource.msg('giftCertificate.type', 'giftCertificate', null)}${savedItem.giftCertificateType}</p>
+                                    <isif condition="${savedItem.giftCertificateType == 'email'}">
+                                        <p>${Resource.msg('giftCertificate.FirstName', 'giftCertificate', null)}${savedItem.firstName}</p>
+                                        <p>${Resource.msg('giftCertificate.LastName', 'giftCertificate', null)}${savedItem.lastName}</p>
+                                        <p>${Resource.msg('giftCertificate.email', 'giftCertificate', null)}${savedItem.email}</p>
+                                    </isif>
                                 </div>
                             </isif>
                         </div>
 
                         <!-- Action Buttons -->
                         <div class="col-md-4 text-right d-flex justify-content-end">
-                            <button class="btn btn-primary add-to-cart mr-2" data-product-id="${savedItem.productId}" data-uuid="${savedItem.custom.uuId}">
+                            <button class="btn btn-primary add-to-cart mr-2"
+                                data-product-id="${savedItem.productID}"
+                                data-uuid="${savedItem.productListItem.UUID}">
                                 ${Resource.msg('button.addtocart', 'saveForLater', null)}
                             </button>
-                            <button class="btn btn-danger remove-saved-item" data-product-id="${savedItem.productId}">
+                            <button class="btn btn-danger remove-saved-item"
+                                data-product-id="${savedItem.productID}"
+                                data-uuid="${savedItem.productListItem.UUID}">
                                 ${Resource.msg('button.remove', 'saveForLater', null)}
                             </button>
                         </div>

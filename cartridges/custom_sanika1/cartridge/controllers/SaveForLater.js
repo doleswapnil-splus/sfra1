@@ -4,21 +4,22 @@
 var server = require('server');
 var BasketMgr = require('dw/order/BasketMgr');
 var Transaction = require('dw/system/Transaction');
-var SavedProductsHelper = require('*/cartridge/scripts/SavedProductsHelper'); // Helper script
+var SavedProductsHelper = require('*/cartridge/scripts/SavedProductsHelper');
 var CustomObjectMgr = require('dw/object/CustomObjectMgr');
 var Resource = require('dw/web/Resource');
 var customObject = "SavedForLater";
 var currentBasket = BasketMgr.getCurrentBasket();
 var ISML = require('dw/template/ISML');
-var CartModel = require('*/cartridge/models/cart'); // Import cart model if needed
-var cartHelper = require('*/cartridge/scripts/cart/cartHelpers'); // Your helper file for cart operations
-
+var CartModel = require('*/cartridge/models/cart');
+var cartHelper = require('*/cartridge/scripts/cart/cartHelpers');
+var ProductListMgr = require('dw/customer/ProductListMgr');
+var ProductList = require('dw/customer/ProductList');
+var ProductMgr = require('dw/catalog/ProductMgr');
+var renderTemplateHelper = require('*/cartridge/scripts/renderTemplateHelper');
 
 server.post('SaveItem', function (req, res, next) {
-    var CartModel = require('*/cartridge/models/cart');
     var basketCalculationHelpers = require('*/cartridge/scripts/helpers/basketCalculationHelpers');
-    var renderTemplateHelper = require('*/cartridge/scripts/renderTemplateHelper');
-    var currentBasket = BasketMgr.getCurrentBasket();
+    var currentCustomer = req.currentCustomer.raw;
 
     if (!currentBasket) {
         res.json({ success: false, error: Resource.msg('CurrentBasket.Error', 'saveForLater', null) });
@@ -31,40 +32,35 @@ server.post('SaveItem', function (req, res, next) {
         return next();
     }
 
+    var basketItems = currentBasket.getAllProductLineItems();
+    var isGiftCertificate = false;
+    var giftCertificateType = '';
+    var firstName = '';
+    var lastName = '';
+    var email = '';
+
+    for (var j = 0; j < basketItems.length; j++) {
+        var pli = basketItems[j];
+
+        if (pli.productID === productId) {
+            isGiftCertificate = pli.custom && 'isGiftCertificate' in pli.custom ? pli.custom.isGiftCertificate : false;
+            giftCertificateType = pli.custom && 'giftCertificateType' in pli.custom ? pli.custom.giftCertificateType : '';
+            firstName = pli.custom && 'firstName' in pli.custom ? pli.custom.firstName : '';
+            lastName = pli.custom && 'lastName' in pli.custom ? pli.custom.lastName : '';
+            email = pli.custom && 'email' in pli.custom ? pli.custom.email : '';
+            break;
+        }
+    }
 
     Transaction.wrap(function () {
-        SavedProductsHelper.saveForLater(currentBasket, productId);
+        SavedProductsHelper.saveForLater(currentBasket, currentCustomer, productId, isGiftCertificate, giftCertificateType, firstName, lastName, email);
         basketCalculationHelpers.calculateTotals(currentBasket);
     });
 
-    var savedItems = [];
-    var savedIterator = CustomObjectMgr.getAllCustomObjects('SavedForLater');
-
-    while (savedIterator.hasNext()) {
-        var savedItem = savedIterator.next();
-        savedItems.push({
-            productId: savedItem.custom.ProductId,
-            name: savedItem.custom.name,
-            price: savedItem.custom.price,
-            image: savedItem.custom.image,
-            quantity: savedItem.custom.quantity,
-            options: JSON.parse(savedItem.custom.options || '[]'),
-            uuId: savedItem.custom.uuId,
-            isGiftCertificate:savedItem.custom.isGiftCertificate,
-            giftCertificateType:savedItem.custom.giftCertificateType,
-            firstName:savedItem.custom.firstName,
-            lastName:savedItem.custom.lastName,
-            email:savedItem.custom.email
-        });
-    }
-    var savedForLaterCards = renderTemplateHelper.getRenderedHtml({savedItems: savedItems }, 'cart/saveForLater')
-
-
-    var cartModel = new CartModel(currentBasket);
-    var cartItems = cartModel.items || [];
-    var cartTotals = cartModel.totals || {};
-    var updatedGrandTotal = cartTotals.grandTotal ? cartTotals.grandTotal : '0.00';
+    var savedItems = SavedProductsHelper.getSavedItems(currentCustomer);
+    var savedForLaterCards = renderTemplateHelper.getRenderedHtml({ savedItems: savedItems }, 'cart/saveForLater');
     var basketModel = new CartModel(currentBasket);
+
     res.json({
         success: true,
         cartData: basketModel,
@@ -74,59 +70,89 @@ server.post('SaveItem', function (req, res, next) {
     return next();
 });
 
-
 server.post('Remove', function (req, res, next) {
     var productId = req.form.productId;
+    var currentCustomer = req.currentCustomer.raw;
 
     if (!productId) {
-        res.json({ success: false, message:Resource.msg('Invalid.ProductId', 'saveForLater', null) });
+        res.json({ success: false, message: Resource.msg('Invalid.ProductId', 'saveForLater', null) });
         return next();
     }
 
-    var savedItem = CustomObjectMgr.getCustomObject(customObject, productId);
+    Transaction.wrap(function () {
 
-    if (savedItem) {
-        Transaction.wrap(function () {
-            CustomObjectMgr.remove(savedItem);
+        var saveForLaterLists = ProductListMgr.getProductLists(currentCustomer, ProductList.TYPE_CUSTOM_1);
+        var saveForLaterList = saveForLaterLists.length > 0 ? saveForLaterLists[0] : null;
+
+        if (!saveForLaterList) {
+            res.json({ success: false, message: Resource.msg('saveForLater.list.not.found', 'saveForLater', null) });
+            return next();
+        }
+
+        var savedItems = saveForLaterList.getProductItems();
+        var productItemToRemove = null;
+
+
+        savedItems.toArray().forEach(function (item) {
+            if (item.product.ID === productId) {
+                productItemToRemove = item;
+                saveForLaterList.removeItem(productItemToRemove);
+            }
         });
-        res.json({ success: true });
-    } else {
-        res.json({ success: false, message: Resource.msg('saveForLater.item.removed.error', 'saveForLater', null) });
-    }
+    });
+
+    var savedItems = SavedProductsHelper.getSavedItems(currentCustomer);
+    var savedForLaterCards = renderTemplateHelper.getRenderedHtml({ savedItems: savedItems }, 'cart/saveForLater');
+    res.json({ success: true, savedForLaterCards: savedForLaterCards });
 
     return next();
 });
 
 server.post('AddToCart', function (req, res, next) {
-    var renderTemplateHelper = require('*/cartridge/scripts/renderTemplateHelper');
-    var productId = req.form.productId;
+    var currentCustomer = req.currentCustomer.raw;
 
+    if (!currentBasket) {
+        res.json({ success: false, error: Resource.msg('CurrentBasket.Error', 'saveForLater', null) });
+        return next();
+    }
+
+    var productId = req.form.productId;
     if (!productId) {
         res.json({ success: false, error: Resource.msg('Invalid.ProductId', 'saveForLater', null) });
         return next();
     }
 
-    var savedItem = CustomObjectMgr.getCustomObject('SavedForLater', productId);
+    var savedForLaterLists = ProductListMgr.getProductLists(currentCustomer, ProductList.TYPE_CUSTOM_1);
+    var savedForLaterList = savedForLaterLists.length > 0 ? savedForLaterLists[0] : null;
+    var savedItem = null;
+
+    if (savedForLaterList) {
+        var productItems = savedForLaterList.getProductItems();
+        for (var i = 0; i < productItems.length; i++) {
+            if (productItems[i].productID === productId) {
+                savedItem = productItems[i];
+                break;
+            }
+        }
+    }
+
     if (!savedItem) {
-        res.json({ success: false, error: 'Item not found in Save for Later' });
+        res.json({ success: false, error: Resource.msg('product.not.found', 'saveForLater', null) });
         return next();
     }
 
     Transaction.wrap(function () {
+        var product = ProductMgr.getProduct(savedItem.productID);
+        if (!product) {
+            res.json({ success: false, error:Resource.msg('product.not.found', 'saveForLater', null) });
+            return next();
+        }
+
         var productLineItem = currentBasket.createProductLineItem(productId, currentBasket.defaultShipment);
-        productLineItem.setQuantityValue(savedItem.custom.quantity);
+        productLineItem.setQuantityValue(savedItem.quantityValue);
 
-        var variantOptions = JSON.parse(savedItem.custom.options || '[]');
-        var variationModel = productLineItem.product.variationModel;
-
-        variantOptions.forEach(function (option) {
-            var attr = variationModel.getProductVariationAttribute(option.displayName);
-            if (attr) {
-                variationModel.setSelectedAttributeValue(attr, option.selectedValue);
-            }
-        });
-
-        if (savedItem.custom.isGiftCertificate && savedItem.custom.giftCertificateType === 'email') {
+        // GC
+        if (savedItem.custom.isGiftCertificate) {
             productLineItem.custom.isGiftCertificate = savedItem.custom.isGiftCertificate;
             productLineItem.custom.giftCertificateType = savedItem.custom.giftCertificateType;
             productLineItem.custom.firstName = savedItem.custom.firstName;
@@ -134,35 +160,25 @@ server.post('AddToCart', function (req, res, next) {
             productLineItem.custom.email = savedItem.custom.email;
         }
 
-        CustomObjectMgr.remove(savedItem); // Remove item from Save for Later
+        if (product.isVariant()) {
+            var variationModel = product.getVariationModel();
+            if (variationModel) {
+                var productVariationAttributes = variationModel.getProductVariationAttributes();
+
+                productVariationAttributes.toArray().forEach(function (attribute) {
+                    var attributeValue = variationModel.getSelectedValue(attribute);
+                    if (attributeValue) {
+                        variationModel.setSelectedAttributeValue(attribute.ID, attributeValue.ID);
+                    }
+                });
+            }
+        }
+        savedForLaterList.removeItem(savedItem); // Remove item from Save for Later list
     });
 
-    // Generate updated cart data
     var updatedBasket = new CartModel(currentBasket);
-    var savedItems = [];
-    var savedIterator = CustomObjectMgr.getAllCustomObjects('SavedForLater');
-
-    while (savedIterator.hasNext()) {
-        var item = savedIterator.next();
-        savedItems.push({
-            productId: item.custom.ProductId,
-            name: item.custom.name,
-            price: item.custom.price,
-            image: item.custom.image,
-            quantity: item.custom.quantity,
-            options: JSON.parse(item.custom.options || '[]'),
-            uuId: savedItem.custom.uuId,
-            isGiftCertificate: item.custom.isGiftCertificate,
-            giftCertificateType: item.custom.giftCertificateType,
-            firstName: item.custom.firstName,
-            lastName: item.custom.lastName,
-            email: item.custom.email
-        });
-    }
-
-    var savedForLaterCards = savedItems.length > 0
-       ? renderTemplateHelper.getRenderedHtml({ savedItems: savedItems }, 'cart/saveForLater')
-        : '<p>Your Saved for Later section is empty.</p>';
+    var savedItems = SavedProductsHelper.getSavedItems(currentCustomer);
+    var savedForLaterCards = renderTemplateHelper.getRenderedHtml({ savedItems: savedItems }, 'cart/saveForLater');
 
     res.json({
         success: true,
@@ -172,6 +188,5 @@ server.post('AddToCart', function (req, res, next) {
 
     return next();
 });
-
 
 module.exports = server.exports();

@@ -125,32 +125,70 @@ server.replace('AddProduct', function (req, res, next) {
 });
 
 server.append('Show', function (req, res, next) {
-    var CustomObjectMgr = require('dw/object/CustomObjectMgr');
+    var CartModel = require('*/cartridge/models/cart');
+    var ProductListMgr = require('dw/customer/ProductListMgr');
+    var ProductList = require('dw/customer/ProductList');
+    var ProductMgr = require('dw/catalog/ProductMgr');
+    var Money = require('dw/value/Money');
+    var currentCustomer = req.currentCustomer.raw;
     var viewData = res.getViewData();
-
     var savedItems = [];
-    var savedIterator = CustomObjectMgr.getAllCustomObjects('SavedForLater');
 
-    while (savedIterator.hasNext()) {
-        var savedItem = savedIterator.next();
-        savedItems.push({
-            productId: savedItem.custom.ProductId,
-            name: savedItem.custom.name,
-            price: savedItem.custom.price,
-            image: savedItem.custom.image,
-            quantity: savedItem.custom.quantity,
-            options: JSON.parse(savedItem.custom.options || '[]'),
-            isGiftCertificate:savedItem.custom.isGiftCertificate,
-            giftCertificateType:savedItem.custom.giftCertificateType,
-            firstName:savedItem.custom.firstName,
-            lastName:savedItem.custom.lastName,
-            email:savedItem.custom.email
-        });
+    if (currentCustomer) {
+        var savedForLaterLists = ProductListMgr.getProductLists(currentCustomer, ProductList.TYPE_CUSTOM_1);
+        var savedForLaterList = savedForLaterLists.length > 0 ? savedForLaterLists[0] : null;
+
+        if (savedForLaterList) {
+            var savedListItems = savedForLaterList.getProductItems();
+
+            for (var i = 0; i < savedListItems.length; i++) {
+                var item = savedListItems[i]; // ProductListItem
+                var product = ProductMgr.getProduct(item.productID); // Get product details
+                var selectedVariantAttributes = [];
+
+                if (product) {
+                    if (product.isVariant()) {
+                        var variationModel = product.getVariationModel();
+                        if (variationModel) {
+                            var productVariationAttributes = variationModel.getProductVariationAttributes();
+
+                            productVariationAttributes.toArray().forEach(function (attribute) {
+                                var attributeValue = variationModel.getSelectedValue(attribute);
+                                if (attributeValue) {
+                                    selectedVariantAttributes.push({
+                                        displayName: attribute.getDisplayName(),
+                                        selectedValue: attributeValue.getDisplayValue()
+                                    });
+                                }
+                            });
+                        }
+                    }
+
+                    // Store variant attributes as a JSON string
+                    var selectedVariantAttributesJSON = JSON.stringify(selectedVariantAttributes);
+
+                    savedItems.push({
+                        productListItem: item,
+                        productID: product.ID,
+                        name: product.name,
+                        price: product.priceModel.price.valueOrNull || 0,
+                        image: product.getImage('small').getURL(),
+                        selectedVariantAttributes: selectedVariantAttributesJSON 
+                    });
+                }
+            }
+        }
     }
-    viewData.savedItems = savedItems;
-    res.setViewData(viewData);
 
+    viewData.savedItems = savedItems;
+    var currentBasket = require('dw/order/BasketMgr').getCurrentBasket();
+    viewData.cart = new CartModel(currentBasket);
+
+    res.setViewData(viewData);
     next();
 });
 
 module.exports = server.exports();
+
+
+

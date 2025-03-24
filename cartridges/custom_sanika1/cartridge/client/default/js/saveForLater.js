@@ -96,7 +96,6 @@ $(document).ready(function () {
     });
 });
 
-
 $(document).on('click', '.remove-saved-item', function () {
     var productId = $(this).data('product-id');
 
@@ -106,7 +105,7 @@ $(document).on('click', '.remove-saved-item', function () {
         data: { productId: productId },
         success: function (response) {
             if (response.success) {
-                location.reload();
+                $('#saveForLaterContainer').html(response.savedForLaterCards);
             } else {
                 alert(response.message);
             }
@@ -118,36 +117,24 @@ $(document).on('click', '.remove-saved-item', function () {
     });
 });
 
-
 $(document).ready(function () {
+    // Add to Cart Functionality
     $('.saved-for-later-section').on('click', '.add-to-cart', function () {
         var productId = $(this).data('product-id');
-        var uuid = $(this).data('uuid');
-        $.spinner().start();
 
         $.ajax({
-            url: window.urls.AddToCart,
+            url:window.urls.AddToCart,
             type: 'POST',
             data: { productId: productId },
-
             success: function (response) {
-                $('.saved-item-' + uuid).remove();
-
-                updateCartTotals(response.cartData);
-                if (response.savedForLaterCards) {
-                    $('#saveForLaterContainer').html(response.savedForLaterCards)
+                if (response.success) {
+                    location.reload();
+                } else {
+                    alert(window.properties.AddToCartError);
                 }
-                if (!response.cartData.hasBonusProduct) {
-                    $('.bonus-product').remove();
-                }
-                $('.coupons-and-promos').empty().append(response.cartData.totals.discountsHtml);
-                $('body').trigger('setShippingMethodSelection', response);
-
-                $.spinner().stop();
             },
             error: function () {
                 alert(window.properties.AddToCartError);
-                $.spinner().stop();
             }
         });
     });
