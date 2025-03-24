@@ -117,6 +117,44 @@
             </attribute-group>
         </group-definitions>
     </type-extension>
+    
+    <type-extension type-id="ProductListItem">
+        <custom-attribute-definitions>
+            <attribute-definition attribute-id="email">
+                <display-name xml:lang="x-default">email</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="firstName">
+                <display-name xml:lang="x-default">firstName</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="giftCertificateType">
+                <display-name xml:lang="x-default">giftCertificateType</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="isGiftCertificate">
+                <type>boolean</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
+            <attribute-definition attribute-id="lastName">
+                <display-name xml:lang="x-default">lastName</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+        </custom-attribute-definitions>
+    </type-extension>
 
     <custom-type type-id="Ratings_And_Reviews">
         <display-name xml:lang="x-default">Ratings_And_Reviews</display-name>
