@@ -12,7 +12,7 @@
 
     <!-- Save for Later Button -->
     <div class="save-for-later ml-3">
-        <isif condition="${!lineItem.bonusProductLineItem}">
+        <isif condition="${!lineItem.isBonusProductLineItem}">
             <button class="btn btn-link text-primary save-for-later-btn p-0"
                     data-product-id="${lineItem.id}"
                     style="white-space: nowrap;"
@@ -22,3 +22,4 @@
         </isif>
     </div>
 </div>
+
