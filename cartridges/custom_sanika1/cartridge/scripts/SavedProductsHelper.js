@@ -1,9 +1,6 @@
 'use strict';
 
-var collections = require('*/cartridge/scripts/util/collections');
-var BasketMgr = require('dw/order/BasketMgr');
 var Transaction = require('dw/system/Transaction');
-var CustomObjectMgr = require('dw/object/CustomObjectMgr');
 var ProductListMgr = require('dw/customer/ProductListMgr');
 var ProductList = require('dw/customer/ProductList');
 var ProductMgr = require('dw/catalog/ProductMgr');
@@ -25,7 +22,6 @@ function saveForLater(basket, customer, productId, isGiftCertificate, giftCertif
             var saveForLaterList = ProductListMgr.getProductLists(customer, ProductList.TYPE_CUSTOM_1);
             saveForLaterList = saveForLaterList.length > 0 ? saveForLaterList[0] : null;
 
-            // If list does not exist, create it
             if (!saveForLaterList) {
                 saveForLaterList = ProductListMgr.createProductList(customer, ProductList.TYPE_CUSTOM_1);
                 saveForLaterList.setName('Save for Later');
@@ -33,20 +29,17 @@ function saveForLater(basket, customer, productId, isGiftCertificate, giftCertif
 
             var savedItem = saveForLaterList.createProductItem(product);
 
-             // Store custom attributes in saved list
-             savedItem.custom.isGiftCertificate = isGiftCertificate;
-             savedItem.custom.giftCertificateType = giftCertificateType;
-             savedItem.custom.firstName = firstName;
-             savedItem.custom.lastName = lastName;
-             savedItem.custom.email = email;
+            savedItem.custom.isGiftCertificate = isGiftCertificate;
+            savedItem.custom.giftCertificateType = giftCertificateType;
+            savedItem.custom.firstName = firstName;
+            savedItem.custom.lastName = lastName;
+            savedItem.custom.email = email;
 
-            // Remove item from cart
             basket.removeProductLineItem(itemToSave);
         });
 
         return itemToSave;
     }
-
     return null;
 }
 
@@ -111,12 +104,10 @@ function getSavedItems(currentCustomer) {
             });
         }
     }
-
     return savedItems;
 }
 
 module.exports = {
     saveForLater: saveForLater,
-    getSavedItems:getSavedItems
+    getSavedItems: getSavedItems
 };
-

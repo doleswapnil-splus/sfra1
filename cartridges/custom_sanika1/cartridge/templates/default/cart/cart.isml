@@ -52,22 +52,8 @@
         <div class="container cart cart-page">
             <div class="row">
                 <!---product cards--->
-                <iscomment> <div class="col-sm-7 col-md-8">
-                    <isloop items="${pdict.items}" var="lineItem">
-                        <isif condition="${lineItem.productType === 'bundle'}">
-                            <isinclude template="cart/productCard/cartBundleCard" />
-                        <iselse/>
-                            <isif condition="${lineItem.noProduct === true}">
-                                <isinclude template="cart/productCard/uncategorizedCartProductCard" />
-                            <iselse/>
-                                <isinclude template="cart/productCard/cartProductCard" />
-                            </isif>
-                        </isif>
-                    </isloop>
-                    <isinclude template="cart/cartApproachingDiscount" />
-                </div> </iscomment>
                <isinclude template="cart/cartProductList" />
-               
+
                 <!---totals, and checkout actions--->
                 <div class="col-sm-5 col-md-4 totals">
                     <isinclude template="cart/cartPromoCode" />

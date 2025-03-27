@@ -1,6 +1,5 @@
 <!-- Edit and Save for Later Buttons -->
 <div class="product-actions d-flex align-items-center flex-wrap">
-    <!-- Edit Button (kept inside product-edit) -->
     <div class="product-edit">
         <a href="${URLUtils.url('Cart-GetProduct', 'uuid', lineItem.UUID)}"
            class="btn btn-link text-primary edit"
