@@ -59,6 +59,11 @@ $(document).ready(function () {
             type: 'POST',
             data: { productId: productId },
             success: function (response) {
+                if (!response.success) {
+                    $.spinner().stop(); 
+                    alert(response.error);
+                    return;
+                }
                 updateCartTotals(response.cartData);
                 if (response.savedForLaterCards) {
                     $('#saveForLaterContainer').html(response.savedForLaterCards)

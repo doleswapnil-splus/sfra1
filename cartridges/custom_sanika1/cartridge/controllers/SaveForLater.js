@@ -47,11 +47,17 @@ server.post('SaveItem', function (req, res, next) {
             break;
         }
     }
-
-    Transaction.wrap(function () {
-        SavedProductsHelper.saveForLater(currentBasket, currentCustomer, productId, isGiftCertificate, giftCertificateType, firstName, lastName, email);
+    var savedItem = Transaction.wrap(function () {
+        return SavedProductsHelper.saveForLater(
+            currentBasket, currentCustomer, productId, isGiftCertificate, giftCertificateType, firstName, lastName, email
+        );
         basketCalculationHelpers.calculateTotals(currentBasket);
     });
+
+    if (!savedItem) {
+        res.json({ success: false, error: Resource.msg('product.duplicate', 'saveForLater', null)});
+        return next();
+    }
 
     var savedItems = SavedProductsHelper.getSavedItems(currentCustomer);
     var savedForLaterCards = renderTemplateHelper.getRenderedHtml({ savedItems: savedItems }, 'cart/saveForLater');

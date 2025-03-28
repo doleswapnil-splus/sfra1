@@ -17,30 +17,37 @@ function saveForLater(basket, customer, productId, isGiftCertificate, giftCertif
         }
     }
 
-    if (itemToSave) {
-        Transaction.wrap(function () {
-            var saveForLaterList = ProductListMgr.getProductLists(customer, ProductList.TYPE_CUSTOM_1);
-            saveForLaterList = saveForLaterList.length > 0 ? saveForLaterList[0] : null;
-
-            if (!saveForLaterList) {
-                saveForLaterList = ProductListMgr.createProductList(customer, ProductList.TYPE_CUSTOM_1);
-                saveForLaterList.setName('Save for Later');
-            }
-
-            var savedItem = saveForLaterList.createProductItem(product);
-
-            savedItem.custom.isGiftCertificate = isGiftCertificate;
-            savedItem.custom.giftCertificateType = giftCertificateType;
-            savedItem.custom.firstName = firstName;
-            savedItem.custom.lastName = lastName;
-            savedItem.custom.email = email;
-
-            basket.removeProductLineItem(itemToSave);
-        });
-
-        return itemToSave;
+    if (!itemToSave) {
+        return null;
     }
-    return null;
+
+    var saveForLaterList = ProductListMgr.getProductLists(customer, ProductList.TYPE_CUSTOM_1);
+    saveForLaterList = saveForLaterList.length > 0 ? saveForLaterList[0] : null;
+
+    if (!saveForLaterList) {
+        saveForLaterList = ProductListMgr.createProductList(customer, ProductList.TYPE_CUSTOM_1);
+        saveForLaterList.setName('Save for Later');
+    }
+
+    var savedItems = saveForLaterList.items.toArray();
+    for (var j = 0; j < savedItems.length; j++) {
+        if (savedItems[j].product.ID === productId) {
+            return null;
+        }
+    }
+
+    Transaction.wrap(function () {
+        var savedItem = saveForLaterList.createProductItem(product);
+        savedItem.custom.isGiftCertificate = isGiftCertificate;
+        savedItem.custom.giftCertificateType = giftCertificateType;
+        savedItem.custom.firstName = firstName;
+        savedItem.custom.lastName = lastName;
+        savedItem.custom.email = email;
+
+        basket.removeProductLineItem(itemToSave);
+    });
+
+    return itemToSave;
 }
 
 /**
