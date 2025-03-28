@@ -47,6 +47,7 @@ server.post('SaveItem', function (req, res, next) {
             break;
         }
     }
+
     var savedItem = Transaction.wrap(function () {
         return SavedProductsHelper.saveForLater(
             currentBasket, currentCustomer, productId, isGiftCertificate, giftCertificateType, firstName, lastName, email
@@ -55,7 +56,7 @@ server.post('SaveItem', function (req, res, next) {
     });
 
     if (!savedItem) {
-        res.json({ success: false, error: Resource.msg('product.duplicate', 'saveForLater', null)});
+        res.json({ success: false});
         return next();
     }
 
