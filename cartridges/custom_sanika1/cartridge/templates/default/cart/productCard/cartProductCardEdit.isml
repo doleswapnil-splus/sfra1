@@ -1,0 +1,25 @@
+<!-- Edit and Save for Later Buttons -->
+<div class="product-actions d-flex align-items-center flex-wrap">
+    <div class="product-edit">
+        <a href="${URLUtils.url('Cart-GetProduct', 'uuid', lineItem.UUID)}"
+           class="btn btn-link text-primary edit"
+           data-toggle="modal" data-target="#editProductModal"
+           aria-label="${Resource.msgf('text.edit.line.item','cart', null, lineItem.productName)}"
+           title="${Resource.msg('link.edit.item', 'cart',null)}">
+            ${Resource.msg('link.edit.item', 'cart', null)}
+        </a>
+    </div>
+
+    <!-- Save for Later Button -->
+    <div class="save-for-later ml-3">
+        <isif condition="${!lineItem.isBonusProductLineItem}">
+            <button class="btn btn-link text-primary save-for-later-btn p-0"
+                    data-product-id="${lineItem.id}"
+                    style="white-space: nowrap;"
+                    data-uuid="${lineItem.UUID}">
+                ${Resource.msg('saveForLater.button.productCard', 'saveForLater', null)}
+            </button>
+        </isif>
+    </div>
+</div>
+

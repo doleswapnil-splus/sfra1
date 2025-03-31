@@ -6,7 +6,7 @@ var ProductMgr = require('dw/catalog/ProductMgr');
 var productHelper = require('*/cartridge/scripts/helpers/productHelpers');
 var Resource = require('dw/web/Resource');
 var Transaction = require('dw/system/Transaction');
-
+var CartModel = require('*/cartridge/models/cart');
 /**
  * Checks if all product line items in the basket are email gift certificates.
  * @param {dw.order.Basket} basket - The current basket

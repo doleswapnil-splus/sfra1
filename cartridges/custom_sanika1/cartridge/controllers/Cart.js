@@ -124,4 +124,71 @@ server.replace('AddProduct', function (req, res, next) {
     next();
 });
 
+server.append('Show', function (req, res, next) {
+    var CartModel = require('*/cartridge/models/cart');
+    var ProductListMgr = require('dw/customer/ProductListMgr');
+    var ProductList = require('dw/customer/ProductList');
+    var ProductMgr = require('dw/catalog/ProductMgr');
+    var Money = require('dw/value/Money');
+    var currentCustomer = req.currentCustomer.raw;
+    var viewData = res.getViewData();
+    var savedItems = [];
+
+    if (currentCustomer) {
+        var savedForLaterLists = ProductListMgr.getProductLists(currentCustomer, ProductList.TYPE_CUSTOM_1);
+        var savedForLaterList = savedForLaterLists.length > 0 ? savedForLaterLists[0] : null;
+
+        if (savedForLaterList) {
+            var savedListItems = savedForLaterList.getProductItems();
+
+            for (var i = 0; i < savedListItems.length; i++) {
+                var item = savedListItems[i]; // ProductListItem
+                var product = ProductMgr.getProduct(item.productID); // Get product details
+                var selectedVariantAttributes = [];
+
+                if (product) {
+                    if (product.isVariant()) {
+                        var variationModel = product.getVariationModel();
+                        if (variationModel) {
+                            var productVariationAttributes = variationModel.getProductVariationAttributes();
+
+                            productVariationAttributes.toArray().forEach(function (attribute) {
+                                var attributeValue = variationModel.getSelectedValue(attribute);
+                                if (attributeValue) {
+                                    selectedVariantAttributes.push({
+                                        displayName: attribute.getDisplayName(),
+                                        selectedValue: attributeValue.getDisplayValue()
+                                    });
+                                }
+                            });
+                        }
+                    }
+
+                    // Store variant attributes as a JSON string
+                    var selectedVariantAttributesJSON = JSON.stringify(selectedVariantAttributes);
+
+                    savedItems.push({
+                        productListItem: item,
+                        productID: product.ID,
+                        name: product.name,
+                        price: product.priceModel.price.valueOrNull || 0,
+                        image: product.getImage('small').getURL(),
+                        selectedVariantAttributes: selectedVariantAttributesJSON 
+                    });
+                }
+            }
+        }
+    }
+
+    viewData.savedItems = savedItems;
+    var currentBasket = require('dw/order/BasketMgr').getCurrentBasket();
+    viewData.cart = new CartModel(currentBasket);
+
+    res.setViewData(viewData);
+    next();
+});
+
 module.exports = server.exports();
+
+
+

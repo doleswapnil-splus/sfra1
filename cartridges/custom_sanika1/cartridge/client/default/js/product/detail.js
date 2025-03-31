@@ -8,7 +8,7 @@ var custombase=require('./base');
  */
 function updateGiftCerticate() {
     $('#paperGiftCertificate').prop('checked', true).trigger('change');
-    
+
     function toggleButtons() {
         const $paperRadio = $('#paperGiftCertificate');
         const $personalizeButton = $('#personalizeButton');
@@ -120,7 +120,7 @@ function updateAttribute() {
                 $('.product-detail:not(".bundle-item")').data('pid', productId);
             }
             var variantIdText=productId;
-            $('input.product-id').val(variantIdText);
+            $('input.wishlist-product-id').val(variantIdText);
 
            if (response.data.isWishlisted) {
             $('.wishlist-icon-button i').removeClass('wishlist-removed').addClass('wishlist-added');

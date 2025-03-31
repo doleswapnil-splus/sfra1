@@ -27,7 +27,7 @@
                             </isif>
                         </isloop>
                         <!-- Check if product is a Gift Certificate -->
-                        <isif condition="${lineItem.isGiftCertificate}">
+                        <isif condition="${lineItem.isGiftCertificate && lineItem.giftCertificateObj.giftCertificateType == 'email'}">
                             <div class="cart-items" data-gift-certificate-type="${lineItem.giftCertificateObj.giftCertificateType}">
                                 <p>${Resource.msg('giftCertificate.type', 'giftCertificate', null)}${lineItem.giftCertificateObj.giftCertificateType}</p>
                                 <p>${Resource.msg('giftCertificate.FirstName', 'giftCertificate', null)}${lineItem.giftCertificateObj.firstName}</p>
