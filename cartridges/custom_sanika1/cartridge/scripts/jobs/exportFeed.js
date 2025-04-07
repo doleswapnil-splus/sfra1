@@ -12,9 +12,8 @@ var StringUtils = require('dw/util/StringUtils');
 
 function getProductRating() {
     var productIterator = ProductMgr.queryAllSiteProducts();
-    var allReviews = [];
+    var allProducts = [];
     var noRating = Resource.msg('service.no.rating', 'service', null);
-
     var now = new Calendar();
     var dateTime = StringUtils.formatCalendar(now, "yyyy-MM-dd_HH-mm-ss");
 
@@ -28,55 +27,61 @@ function getProductRating() {
         }
 
         var responseObject = ratingResponse.object;
-        var items = JSON.parse(responseObject);
+        var Response = JSON.parse(responseObject);
 
-        if (items.message && items.message.indexOf(noRating) !== -1) {
+        if (Response.message && Response.message.indexOf(noRating) !== -1) {
             continue;
         }
 
-        delete items.action;
-        delete items.locale;
-        delete items.queryString;
-
-        var reviews = Object.values(items);
-        if (reviews.length === 0) {
-            continue;
-        }
-
-        allReviews = allReviews.concat(reviews);
+        allProducts.push({
+            Product_id: Response.Product_id,
+            Reviews: Response.Reviews
+        });
     }
 
     productIterator.close();
 
-    if (allReviews.length > 0) {
-
-    var path = File.IMPEX + File.SEPARATOR + "src" + File.SEPARATOR + "export" + File.SEPARATOR + 'exportRating_' +  dateTime + '.xml';
+    if (allProducts.length > 0) {
+        var path = File.IMPEX + File.SEPARATOR + "src" + File.SEPARATOR + "export" + File.SEPARATOR + 'exportRating_' + dateTime + '.xml';
         var file = new File(path);
         var fileWriter = new FileWriter(file);
         var xmlWriter = new XMLStreamWriter(fileWriter);
 
         xmlWriter.writeStartDocument();
-        xmlWriter.writeStartElement('Reviews');
+        xmlWriter.writeStartElement('Products');
 
-        allReviews.forEach(function (review) {
-            xmlWriter.writeStartElement("Review");
+        allProducts.forEach(function (product) {
+            xmlWriter.writeStartElement('Product');
 
-            xmlWriter.writeStartElement("orderId");
-            xmlWriter.writeCharacters(String(review.orderId || "N/A"));
+            xmlWriter.writeStartElement('Product_id');
+            xmlWriter.writeCharacters(product.Product_id);
             xmlWriter.writeEndElement();
 
-            xmlWriter.writeStartElement("review");
-            xmlWriter.writeCharacters(review.review || "No comment");
-            xmlWriter.writeEndElement();
+            xmlWriter.writeStartElement('Reviews');
 
-            xmlWriter.writeStartElement("Rating");
-            xmlWriter.writeCharacters(String(review.rating || 0));
-            xmlWriter.writeEndElement();
+            product.Reviews.forEach(function (review) {
+                xmlWriter.writeStartElement("Review");
 
-            xmlWriter.writeStartElement("Reviewer");
-            xmlWriter.writeCharacters(review.email || "Anonymous");
-            xmlWriter.writeEndElement();
+                xmlWriter.writeStartElement("orderId");
+                xmlWriter.writeCharacters(String(review.orderId || "N/A"));
+                xmlWriter.writeEndElement();
 
+                xmlWriter.writeStartElement("review");
+                xmlWriter.writeCharacters(review.review || "No comment");
+                xmlWriter.writeEndElement();
+
+                xmlWriter.writeStartElement("Rating");
+                xmlWriter.writeCharacters(String(review.rating || 0));
+                xmlWriter.writeEndElement();
+
+                xmlWriter.writeStartElement("Reviewer");
+                xmlWriter.writeCharacters(review.email || "Anonymous");
+                xmlWriter.writeEndElement();
+
+                xmlWriter.writeEndElement();
+            });
+
+            xmlWriter.writeEndElement();
             xmlWriter.writeEndElement();
         });
 
