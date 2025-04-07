@@ -7,11 +7,16 @@ var XMLStreamWriter = require('dw/io/XMLStreamWriter');
 var ProductMgr = require('dw/catalog/ProductMgr');
 var ProductRatingService = require('*/cartridge/scripts/services/ProductRatingService');
 var Resource = require('dw/web/Resource');
+var Calendar = require('dw/util/Calendar');
+var StringUtils = require('dw/util/StringUtils');
 
 function getProductRating() {
     var productIterator = ProductMgr.queryAllSiteProducts();
     var allReviews = [];
     var noRating = Resource.msg('service.no.rating', 'service', null);
+
+    var now = new Calendar();
+    var dateTime = StringUtils.formatCalendar(now, "yyyy-MM-dd_HH-mm-ss");
 
     while (productIterator.hasNext()) {
         var product = productIterator.next();
@@ -22,8 +27,8 @@ function getProductRating() {
             continue;
         }
 
-        var responseObject = ratingResponse.object;//ret strg
-        var items = JSON.parse(responseObject);//con to json obj
+        var responseObject = ratingResponse.object;
+        var items = JSON.parse(responseObject);
 
         if (items.message && items.message.indexOf(noRating) !== -1) {
             continue;
@@ -44,7 +49,8 @@ function getProductRating() {
     productIterator.close();
 
     if (allReviews.length > 0) {
-        var path = File.IMPEX + File.SEPARATOR + "src" + File.SEPARATOR + "export" + File.SEPARATOR + 'exportRating.xml';
+
+    var path = File.IMPEX + File.SEPARATOR + "src" + File.SEPARATOR + "export" + File.SEPARATOR + 'exportRating_' +  dateTime + '.xml';
         var file = new File(path);
         var fileWriter = new FileWriter(file);
         var xmlWriter = new XMLStreamWriter(fileWriter);
